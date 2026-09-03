@@ -8,7 +8,7 @@ from fastapi import FastAPI
 
 from doc_intel import __version__
 from doc_intel.api.jobs import InMemoryJobStore
-from doc_intel.api.routes import health
+from doc_intel.api.routes import ask, documents, health, ingest, metrics
 
 
 def create_app() -> FastAPI:
@@ -18,7 +18,8 @@ def create_app() -> FastAPI:
         description="Document intelligence for supplier invoices and contracts.",
     )
     application.state.jobs = InMemoryJobStore()
-    application.include_router(health.router)
+    for module in (health, ingest, documents, ask, metrics):
+        application.include_router(module.router)
     return application
 
 
