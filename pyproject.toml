@@ -54,6 +54,8 @@ ignore = ["ANN401"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ANN"]
+# Multilingual sample text legitimately mixes scripts; RUF001 sees look-alike letters.
+"src/doc_intel/dataset/content.py" = ["RUF001"]
 
 [tool.mypy]
 python_version = "3.12"
