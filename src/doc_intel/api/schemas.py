@@ -26,6 +26,7 @@ class DocumentOut(BaseModel):
     invoice: Invoice | None
     issues: list[ValidationIssue]
     cost_usd: Decimal | None
+    confidence: dict[str, float] | None = Field(default=None, description="Flat field path -> 0..1")
     error: str | None
 
 

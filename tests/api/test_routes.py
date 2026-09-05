@@ -7,7 +7,7 @@ def test_health(client: TestClient) -> None:
     assert response.json() == {"status": "ok", "version": "0.0.1"}
 
 
-def test_ingest_queues_a_job_that_documents_lists(client: TestClient) -> None:
+def test_ingest_queues_then_processes_in_the_background(client: TestClient) -> None:
     response = client.post(
         "/ingest", files={"file": ("inv.jpg", b"not-really-a-jpeg", "image/jpeg")}
     )
@@ -15,11 +15,28 @@ def test_ingest_queues_a_job_that_documents_lists(client: TestClient) -> None:
     body = response.json()
     assert body["status"] == "queued"
 
-    documents = client.get("/documents").json()["documents"]
-    assert [d["id"] for d in documents] == [body["job_id"]]
-    assert documents[0]["filename"] == "inv.jpg"
-    assert documents[0]["invoice"] is None
-    assert documents[0]["issues"] == []
+    # TestClient runs background tasks before returning, so the job is already done here
+    document = client.get(f"/documents/{body['job_id']}").json()
+    assert document["status"] == "done"
+    assert document["filename"] == "inv.jpg"
+    assert document["invoice"]["number"]["value"] == "INV-1042"
+    assert document["cost_usd"] == "0.0042"
+    assert document["confidence"]["number"] == 0.9
+    assert document["issues"] == []
+
+
+def test_failed_processing_is_recorded_on_the_job(client: TestClient) -> None:
+    job_id = client.post("/ingest", files={"file": ("bad.pdf", b"BOOM", "application/pdf")}).json()[
+        "job_id"
+    ]
+    document = client.get(f"/documents/{job_id}").json()
+    assert document["status"] == "failed"
+    assert "unreadable document" in document["error"]
+    assert document["invoice"] is None
+
+
+def test_unknown_document_is_404(client: TestClient) -> None:
+    assert client.get("/documents/nope").status_code == 404
 
 
 def test_ingest_rejects_unknown_mime(client: TestClient) -> None:
@@ -27,9 +44,20 @@ def test_ingest_rejects_unknown_mime(client: TestClient) -> None:
     assert response.status_code == 415
 
 
-def test_issues_is_empty_before_processing(client: TestClient) -> None:
-    client.post("/ingest", files={"file": ("inv.pdf", b"%PDF-1.4", "application/pdf")})
+def test_issues_include_cross_document_duplicates(client: TestClient) -> None:
     assert client.get("/issues").json() == {"issues": []}
+    a = client.post("/ingest", files={"file": ("a.pdf", b"%PDF-1.4", "application/pdf")}).json()[
+        "job_id"
+    ]
+    b = client.post("/ingest", files={"file": ("b.pdf", b"%PDF-1.4", "application/pdf")}).json()[
+        "job_id"
+    ]
+    issues = client.get("/issues").json()["issues"]
+    assert {(i["document_id"], i["issue"]["code"]) for i in issues} == {
+        (a, "duplicate_number"),
+        (b, "duplicate_number"),
+    }
+    assert issues[0]["issue"]["related_document_ids"] == [b]
 
 
 def test_ask_answers_not_in_documents(client: TestClient) -> None:
