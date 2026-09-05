@@ -21,5 +21,5 @@ dataset:    ## generate labeled synthetic documents (Stage 2)
 eval:       ## run the golden set, log to MLflow (Stage 4)
 	@echo "make eval: arrives in Stage 4"
 
-llm-smoke:  ## same prompt across providers, compare cost and latency (Stage 1)
-	@echo "make llm-smoke: arrives in Stage 1"
+llm-smoke:  ## same prompt across providers, compare cost and latency
+	uv run python -m doc_intel.llm.smoke
