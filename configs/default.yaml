@@ -1,3 +1,17 @@
-# Pipeline configuration under comparison. Pipeline.from_config() reads this from Stage 2.
-pipeline:
-  name: default
+# The pipeline configuration under comparison. `Pipeline.from_config("configs/default.yaml")`.
+# Copy this file to try another provider, model, or extraction strategy; evals report per config.
+name: default
+
+llm:
+  provider: ollama          # anthropic | openai | ollama (keys and hosts come from .env)
+  model: qwen2.5vl:3b
+
+ocr:
+  fallback_below: 60        # mean Tesseract confidence (0-100) under which the vision model transcribes
+  psm: 3                    # Tesseract page segmentation mode
+  vision_model: null        # null = the llm model above
+
+extraction:
+  strategy: both            # text | image | both
+  max_tokens: 4096
+  max_repairs: 1            # validation-feedback rounds before giving up
