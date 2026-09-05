@@ -12,7 +12,7 @@ DaySync is a booking and business-management platform for salons. Salon owners r
 |---|---|---|
 | 0 | Project skeleton, models, API, CI | done |
 | 1 | LLM wrapper: OpenAI / Anthropic / Ollama, structured output, cost and latency logging | done |
-| 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | 2a done (dataset, preprocessing, OCR); 2b in progress |
+| 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | done |
 | 3 | RAG: structure-aware chunking, pgvector hybrid search, reranking, cited answers | – |
 | 4 | Evals: Ragas, LLM-as-judge, MLflow tracking, A/B of prompts and models | – |
 | 5 | Open-source models: local inference, LoRA fine-tune on extraction | – |
@@ -22,7 +22,7 @@ Latest results (updated with each `make eval` run):
 
 | Configuration | Field accuracy | Retrieval recall@5 | Faithfulness | Cost / doc | p95 latency |
 |---|---|---|---|---|---|
-| – | – | – | – | – | – |
+| `default` — Ollama qwen2.5vl:3b, strategy `both`, 24 synthetic docs (2026-09-06, Apple Silicon laptop) | 69% (en 86 · ru 75 · uk 69 · ka 41) | – | – | $0 | 82 s |
 
 Experiment write-ups live in `docs/experiments/`.
 
@@ -111,9 +111,10 @@ src/doc_intel/
   llm/        provider adapters, structured output, cost logging
   dataset/    synthetic invoices: content with ground truth, layouts, phone-photo degradation
   ocr/        image loading, preprocessing, Tesseract, vision fallback
-  extract/    schemas, prompts, validation rules
+  extract/    prompt, extraction strategies with a repair round, validation rules
+  pipeline.py Pipeline.from_config: OCR -> extraction -> validation -> ProcessResult
   rag/        chunking, indexing, retrieval, answering
-  eval/       golden set, metrics, MLflow integration
+  eval/       field accuracy over the synthetic dataset (make eval); MLflow in Stage 4
 tests/
 data/samples/   generated documents and ground truth
 configs/        pipeline configurations under comparison
