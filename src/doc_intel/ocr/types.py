@@ -31,6 +31,9 @@ class OcrResult(BaseModel):
     pages: list[OcrPage]
     engine: Literal["tesseract", "vision"]
     cost_usd: Decimal = Decimal(0)
+    fallback_error: str | None = Field(
+        default=None, description="Set when the vision fallback failed"
+    )
 
     @property
     def text(self) -> str:
