@@ -8,11 +8,19 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
   "anthropic>=1.4,<2",
   "fastapi>=0.141,<1",
+  "numpy>=2.5,<3",
   "ollama>=0.6,<1",
   "openai>=3.8,<4",
+  "opencv-python-headless>=5,<6",
+  "pillow>=12,<13",
+  "pillow-heif>=1.6,<2",
   "pydantic>=2.13,<3",
   "pydantic-settings>=2.15,<3",
+  "pypdfium2>=5,<6",
+  "pytesseract>=0.3.13,<1",
   "python-multipart>=0.0.32",
+  "pyyaml>=6,<7",
+  "reportlab>=5,<6",
   "uvicorn[standard]>=0.52,<1",
 ]
 
@@ -23,6 +31,8 @@ dev = [
   "ruff>=0.16.6",
   "mypy>=2.3,<3",
   "httpx2>=0.1",
+  "types-pyyaml>=6.0.12.20260815",
+  "types-reportlab>=4.5.1.20260827",
 ]
 
 [build-system]
