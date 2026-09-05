@@ -1,0 +1,18 @@
+{
+  "key": "a41c9f60f07d0779deb3bab03e52661e0385e3f56840cdb88d324ee9c8ea5d17",
+  "recorded_at": "2026-09-05T14:39:29.321188Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You are a transcription engine for photographed business documents. Transcribe every piece of text you can read, one lin",
+    "user_text_preview": "Transcribe this document.",
+    "image_count": 1
+  },
+  "response": {
+    "text": "{\n\"text\": \"Glow Wholesale\\n12 Market Street, Manchester\\nTax ID GB970587150\\n\\nINVOICE SF-2026-4609\\nDate: 03 Aug 2026\\nDue date: 02 Sep 2026\\nBill to: Salon Nova\\nTax ID GB107285672\\n\\nNail gel base 15ml\\n9 pcs x 87.93                791.37\\nBleach powder 500g\\n1 pack x 3.81                 3.81\\nFace mask sheet 10pc\\n10 pcs x 71.65                716.50\\nDisposable towels 50pc\\n3 pcs x 39.55                118.65\\nKeratin conditioner 1L\\n12 pack x 8.43                101.16\\n\\nSubtotal                        1,731.49\\nVAT 21%                        363.61\\nTOTAL DUE EUR                 2,095.10\\n\\n\",\n\"language\": \"en\",\n\"confidence\": 0.95\n}",
+    "input_tokens": 1183,
+    "output_tokens": 282,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

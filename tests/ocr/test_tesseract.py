@@ -33,7 +33,7 @@ def test_ukrainian_invoice_number_and_total_are_read() -> None:
     page = ocr_page(preprocess(image).binary, languages="rus+ukr+eng")
     number, total = content.invoice.number.quote, content.invoice.totals.grand_total.quote
     assert number and total
-    # Tesseract tends to read the Latin prefix of a number as a Cyrillic look-alike (F -> Е);
+    # Tesseract tends to read the Latin prefix of a number as a Cyrillic look-alike letter;
     # the digits survive. Fixing that is the extraction stage's job, not OCR's.
     assert number.split("-", 1)[1] in page.text, page.text
     assert total in page.text, page.text
