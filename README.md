@@ -12,7 +12,7 @@ DaySync is a booking and business-management platform for salons. Salon owners r
 |---|---|---|
 | 0 | Project skeleton, models, API, CI | done |
 | 1 | LLM wrapper: OpenAI / Anthropic / Ollama, structured output, cost and latency logging | done |
-| 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | – |
+| 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | 2a done (dataset, preprocessing, OCR); 2b in progress |
 | 3 | RAG: structure-aware chunking, pgvector hybrid search, reranking, cited answers | – |
 | 4 | Evals: Ragas, LLM-as-judge, MLflow tracking, A/B of prompts and models | – |
 | 5 | Open-source models: local inference, LoRA fine-tune on extraction | – |
@@ -109,7 +109,8 @@ src/doc_intel/
   models/     Invoice, ValidationIssue, ProcessResult; every leaf is Extracted[T] (value, quote, confidence)
   api/        FastAPI app
   llm/        provider adapters, structured output, cost logging
-  ocr/        preprocessing, OCR backends, vision fallback
+  dataset/    synthetic invoices: content with ground truth, layouts, phone-photo degradation
+  ocr/        image loading, preprocessing, Tesseract, vision fallback
   extract/    schemas, prompts, validation rules
   rag/        chunking, indexing, retrieval, answering
   eval/       golden set, metrics, MLflow integration
