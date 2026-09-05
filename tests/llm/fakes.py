@@ -8,17 +8,20 @@ from doc_intel.llm import LLM, LLMRequest, RawCompletion
 class FakeLLM(LLM):
     provider: ClassVar[str] = "fake"
 
-    def __init__(self, text: str, input_tokens: int = 100, output_tokens: int = 20) -> None:
+    def __init__(
+        self, text: str | list[str], input_tokens: int = 100, output_tokens: int = 20
+    ) -> None:
         super().__init__()
-        self.text = text
+        self.texts = [text] if isinstance(text, str) else list(text)
         self.input_tokens = input_tokens
         self.output_tokens = output_tokens
         self.calls: list[tuple[LLMRequest, dict[str, Any]]] = []
 
     async def _complete_raw(self, request: LLMRequest, schema: dict[str, Any]) -> RawCompletion:
         self.calls.append((request, schema))
+        text = self.texts[min(len(self.calls) - 1, len(self.texts) - 1)]
         return RawCompletion(
-            text=self.text,
+            text=text,
             input_tokens=self.input_tokens,
             output_tokens=self.output_tokens,
             request_id="fake-1",

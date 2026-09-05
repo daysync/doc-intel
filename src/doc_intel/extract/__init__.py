@@ -1,1 +1,1 @@
-"""Extraction prompts and validation rules (Stage 2)."""
+"""Extraction prompt, extractor strategies, and validation rules."""
