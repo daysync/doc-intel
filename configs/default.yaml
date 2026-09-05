@@ -1,0 +1,3 @@
+# Pipeline configuration under comparison. Pipeline.from_config() reads this from Stage 2.
+pipeline:
+  name: default
