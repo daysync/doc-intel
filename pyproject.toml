@@ -64,6 +64,10 @@ plugins = ["pydantic.mypy"]
 mypy_path = "src"
 files = ["src", "tests"]
 
+[[tool.mypy.overrides]]
+module = ["pypdfium2", "pypdfium2.*"]
+ignore_missing_imports = true
+
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
