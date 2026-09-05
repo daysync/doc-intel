@@ -65,7 +65,7 @@ mypy_path = "src"
 files = ["src", "tests"]
 
 [[tool.mypy.overrides]]
-module = ["pypdfium2", "pypdfium2.*", "pillow_heif", "pillow_heif.*"]
+module = ["pypdfium2", "pypdfium2.*", "pillow_heif", "pillow_heif.*", "pytesseract", "pytesseract.*"]
 ignore_missing_imports = true
 
 [tool.pydantic-mypy]

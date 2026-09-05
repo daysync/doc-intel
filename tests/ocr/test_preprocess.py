@@ -20,7 +20,7 @@ def test_deskew_recovers_a_known_rotation(clean_en_page: np.ndarray, angle: floa
 def test_preprocess_on_a_hard_photo_removes_most_of_the_skew(clean_en_page: np.ndarray) -> None:
     photo = degrade(clean_en_page, "hard", random.Random(4))
     result = preprocess(photo.image)
-    # degrade rotated the page by photo.angle_deg (same cv2 convention); the correction is its negative
+    # degrade rotated by photo.angle_deg (cv2 convention); the correction is its negative
     assert abs(result.angle_deg + photo.angle_deg) < 1.0
     assert result.binary.dtype == np.uint8 and set(np.unique(result.binary)) <= {0, 255}
 
