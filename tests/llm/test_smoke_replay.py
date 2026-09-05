@@ -14,7 +14,7 @@ from doc_intel.llm.recorded import Fixture, RecordedLLM
 from doc_intel.llm.smoke import SYNTHETIC_INVOICE, SYSTEM, SmokeExtraction
 from doc_intel.llm.types import LLMRequest, Message, TextPart
 
-FIXTURES = Path(__file__).parent.parent / "fixtures" / "llm"
+FIXTURES = Path(__file__).parent.parent / "fixtures" / "llm" / "smoke"
 RECORDED = sorted(FIXTURES.glob("*.json"))
 
 
