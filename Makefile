@@ -15,8 +15,8 @@ fmt:        ## auto-format and auto-fix
 typecheck:  ## mypy strict
 	uv run mypy
 
-dataset:    ## generate labeled synthetic documents (Stage 2)
-	@echo "make dataset: arrives in Stage 2"
+dataset:    ## generate labeled synthetic documents into data/samples
+	uv run python -m doc_intel.dataset.generate --out data/samples --n 24 --seed 7
 
 eval:       ## run the golden set, log to MLflow (Stage 4)
 	@echo "make eval: arrives in Stage 4"
