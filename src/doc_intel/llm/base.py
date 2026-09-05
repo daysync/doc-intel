@@ -47,7 +47,7 @@ class LLM(ABC):
             input_tokens=raw.input_tokens,
             output_tokens=raw.output_tokens,
             cached_input_tokens=raw.cached_input_tokens,
-            cost_usd=self.pricing.cost(self.provider, request.model, raw),
+            cost_usd=self.pricing.cost(self._pricing_provider(), request.model, raw),
             latency_ms=latency_ms,
             started_at=started_at,
             request_id=raw.request_id,
@@ -59,3 +59,7 @@ class LLM(ABC):
     def _fixture_key(self, request: LLMRequest, schema: dict[str, Any]) -> str | None:
         """Overridden by the recorded adapter; live adapters have no fixture."""
         return None
+
+    def _pricing_provider(self) -> str:
+        """Which provider's price table applies. The recorded adapter prices as its source."""
+        return self.provider
