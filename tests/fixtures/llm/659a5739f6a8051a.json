@@ -1,0 +1,18 @@
+{
+  "key": "659a5739f6a8051a88640566ca48bf3f6c9ba1a89bb13f4052f55784e68e9882",
+  "recorded_at": "2026-09-05T12:09:35.151724Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You extract fields from supplier invoices. Answer only with JSON matching the schema. For every field give the verbatim ",
+    "user_text_preview": "BEAUTY SUPPLIES LTD          INVOICE\nInvoice No: INV-2026-0917    Date: 30.08.2026\nBill to: Salon Nova, 12 Rustaveli Ave, Tbilisi\n\nItem                     Qty   Unit price   Total\nArgan shampoo 1L   ",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{\n  \"number\": {\n    \"value\": \"INV-2026-0917\",\n    \"quote\": null,\n    \"confidence\": 1\n  },\n  \"issue_date\": {\n    \"value\": \"3008-02-20\",\n    \"quote\": null,\n    \"confidence\": 1\n  },\n  \"currency\": {\n    \"value\": \"EUR\",\n    \"quote\": null,\n    \"confidence\": 1\n  },\n  \"grand_total\": {\n    \"value\": \"78.60\",\n    \"quote\": null,\n    \"confidence\": 1\n  },\n  \"line_item_count\": {\n    \"value\": 2,\n    \"quote\": null,\n    \"confidence\": 1\n  }\n}",
+    "input_tokens": 209,
+    "output_tokens": 182,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}
