@@ -1,18 +1,19 @@
 """The generic invoice schema an extractor fills in.
 
 Every leaf is an ``Extracted[...]`` so each value carries its source quote and confidence.
-Money is ``Decimal``, never ``float``. Language and currency are detected from the document,
+Money is ``Decimal``, never ``float``. ``Money`` and ``Day`` accept the formats models and OCR
+actually produce (see ``parsing.py``) and validate to ``Decimal`` and ``date``.
+Language and currency are detected from the document,
 not configured, because one account can receive invoices in several languages. Nothing here
 is specific to any host product; a host maps this to its own suppliers and expenses.
 """
 
 import re
-from datetime import date
-from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
 from doc_intel.models.fields import Extracted
+from doc_intel.models.parsing import Day, Money
 
 _ISO_4217 = re.compile(r"^[A-Z]{3}$")
 _ISO_639_1 = re.compile(r"^[a-z]{2}$")
@@ -32,26 +33,26 @@ class LineItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     description: Extracted[str]
-    quantity: Extracted[Decimal]
+    quantity: Extracted[Money]
     unit: Extracted[str]
-    unit_price: Extracted[Decimal]
-    total: Extracted[Decimal]
+    unit_price: Extracted[Money]
+    total: Extracted[Money]
 
 
 class Tax(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: Extracted[str]
-    rate: Extracted[Decimal]
-    amount: Extracted[Decimal]
+    rate: Extracted[Money]
+    amount: Extracted[Money]
 
 
 class Totals(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    subtotal: Extracted[Decimal]
-    tax_total: Extracted[Decimal]
-    grand_total: Extracted[Decimal]
+    subtotal: Extracted[Money]
+    tax_total: Extracted[Money]
+    grand_total: Extracted[Money]
 
 
 class Invoice(BaseModel):
@@ -60,8 +61,8 @@ class Invoice(BaseModel):
     supplier: Party
     buyer: Party
     number: Extracted[str]
-    issue_date: Extracted[date]
-    due_date: Extracted[date]
+    issue_date: Extracted[Day]
+    due_date: Extracted[Day]
     currency: Extracted[str]
     language: Extracted[str]
     line_items: list[LineItem]
