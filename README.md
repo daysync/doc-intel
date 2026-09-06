@@ -15,8 +15,8 @@ DaySync is a booking and business-management platform for salons. Salon owners r
 | 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | done |
 | 3 | RAG: structure-aware chunking, pgvector hybrid search, reranking, cited answers | done |
 | 4 | Evals: Ragas, LLM-as-judge, MLflow tracking, A/B of prompts and models | – |
-| 5 | Open-source models: local inference, LoRA fine-tune on extraction | – |
-| 6 | AWS deploy, eval in CI on PRs, monitoring | – |
+| 5 | Open-source models: local inference, LoRA fine-tune on extraction | local inference done (Ollama); LoRA planned in `docs/experiments/0002` |
+| 6 | AWS deploy, eval in CI on PRs, monitoring | container + compose stack, eval in CI, API keys, JSON logs, readiness (`docs/deployment.md`); Terraform deferred |
 
 Latest results (updated with each `make eval` run):
 
@@ -95,13 +95,21 @@ Python 3.12, uv, FastAPI, pydantic v2, asyncio · Tesseract / PaddleOCR, OpenCV 
 
 ```bash
 uv sync
-cp .env.example .env            # provider keys, DATABASE_URL
+cp .env.example .env            # provider keys, DATABASE_URL; empty keys = local Ollama
 docker compose up -d postgres
+brew install tesseract tesseract-lang ollama && ollama pull qwen2.5vl:3b nomic-embed-text qwen2.5:7b
 make dataset                    # generate labeled synthetic documents
-make api                        # http://localhost:8000
-make eval                       # run the golden set, log to MLflow
+make api                        # http://localhost:8000 (OpenAPI at /docs)
+make eval                       # field accuracy on the dataset, logged to MLflow
+make eval-retrieval             # recall@5 / MRR of hybrid retrieval
+make eval-answers               # end-to-end answers with citations, judge, faithfulness
+make eval-compare A=… B=…       # paired A/B with a confidence interval
+make mlflow-ui                  # compare runs at http://localhost:5000
 make llm-smoke                  # same prompt across providers, compare cost and latency
 ```
+
+Or the whole stack in containers, including Ollama: `docker compose --profile full up -d`
+(see `docs/deployment.md`). Set `API_KEYS` for anything reachable from a network.
 
 ## Layout
 
@@ -123,6 +131,12 @@ configs/        pipeline configurations under comparison
 docs/experiments/
 infra/          Terraform
 ```
+
+## Deploying and integrating
+
+`docs/deployment.md` covers the image, environment, probes and sizing; `docs/integration.md`
+covers how a host product uses the result (review screen, matching, metering). Security
+notes and the reporting address are in `SECURITY.md`.
 
 ## Contributing
 

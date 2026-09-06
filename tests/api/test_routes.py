@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 def test_health(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "version": "0.0.1"}
+    assert response.json() == {"status": "ok", "version": "0.1.0"}
 
 
 def test_ingest_queues_then_processes_in_the_background(client: TestClient) -> None:
