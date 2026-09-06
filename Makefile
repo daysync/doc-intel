@@ -1,4 +1,4 @@
-.PHONY: api test lint typecheck fmt dataset eval eval-retrieval eval-answers llm-smoke
+.PHONY: api test lint typecheck fmt dataset eval eval-retrieval eval-answers llm-smoke eval-compare mlflow-ui
 
 api:        ## run the API with autoreload on :8000
 	uv run uvicorn doc_intel.api.app:app --factory --reload --port 8000
@@ -29,3 +29,9 @@ eval-retrieval:  ## recall@5 and MRR of hybrid retrieval over ground-truth quest
 
 eval-answers:  ## end-to-end QA accuracy and correct declines over the ground-truth index (Postgres + LLM)
 	uv run python -m doc_intel.eval.answers --samples data/samples --config configs/default.yaml
+
+eval-compare:  ## paired A/B of two answer-eval reports: make eval-compare A=data/samples/eval-answers-default.json B=data/samples/eval-answers-rerank.json
+	uv run python -m doc_intel.eval.compare $(A) $(B)
+
+mlflow-ui:  ## browse tracked eval runs at http://localhost:5000
+	MLFLOW_DISABLE_AGENT_HINT=1 uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000

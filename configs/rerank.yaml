@@ -27,3 +27,8 @@ rag:
   candidates: 20
   scope_by_number: true
   rerank: true
+
+eval:
+  judge_provider: ollama    # the judge is never the model under test (enforced)
+  judge_model: qwen2.5:7b
+  ragas: true               # faithfulness + answer relevancy on make eval-answers (costs extra calls)

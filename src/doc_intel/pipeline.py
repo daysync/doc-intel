@@ -56,6 +56,13 @@ class EmbeddingsConfig(BaseModel):
     dimensions: int = 768
 
 
+class EvalConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    judge_provider: str = "ollama"
+    judge_model: str = "qwen2.5:7b"
+    ragas: bool = True
+
+
 class PipelineConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = "default"
@@ -64,6 +71,7 @@ class PipelineConfig(BaseModel):
     extraction: ExtractionConfig = ExtractionConfig()
     embeddings: EmbeddingsConfig = EmbeddingsConfig()
     rag: RagConfig = RagConfig()
+    eval: EvalConfig = EvalConfig()
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "PipelineConfig":
