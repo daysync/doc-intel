@@ -51,6 +51,9 @@ class ProcessResult(BaseModel):
     issues: list[ValidationIssue]
     cost_usd: Decimal
     timings: Timings
+    ocr_engine: str | None = Field(default=None, description="tesseract or vision")
+    model: str | None = Field(default=None, description="Extraction model id")
+    repairs: int = Field(default=0, description="Validation-feedback rounds the extractor needed")
 
     @property
     def confidence(self) -> dict[str, float]:

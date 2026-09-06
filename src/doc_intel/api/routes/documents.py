@@ -1,9 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from doc_intel.api.deps import get_store
-from doc_intel.api.jobs import InMemoryJobStore, Job
+from doc_intel.api.deps import get_processor, get_store
+from doc_intel.api.jobs import InMemoryJobStore, Job, JobStatus
+from doc_intel.api.processing import DocumentProcessor
 from doc_intel.api.schemas import DocumentOut, DocumentsResponse, IssueOut, IssuesResponse
 
 router = APIRouter()
@@ -19,6 +20,7 @@ def _to_document(job: Job) -> DocumentOut:
         invoice=result.invoice if result else None,
         issues=result.issues if result else [],
         cost_usd=result.cost_usd if result else None,
+        confidence=result.confidence if result else None,
         error=job.error,
     )
 
@@ -28,13 +30,30 @@ def list_documents(store: Annotated[InMemoryJobStore, Depends(get_store)]) -> Do
     return DocumentsResponse(documents=[_to_document(job) for job in store.list()])
 
 
+@router.get("/documents/{job_id}")
+def get_document(
+    job_id: str, store: Annotated[InMemoryJobStore, Depends(get_store)]
+) -> DocumentOut:
+    job = store.get(job_id)
+    if job is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "no such document")
+    return _to_document(job)
+
+
 @router.get("/issues")
-def list_issues(store: Annotated[InMemoryJobStore, Depends(get_store)]) -> IssuesResponse:
-    """Every validation issue across processed documents, flattened."""
+def list_issues(
+    store: Annotated[InMemoryJobStore, Depends(get_store)],
+    processor: Annotated[DocumentProcessor, Depends(get_processor)],
+) -> IssuesResponse:
+    """Per-document issues plus cross-document ones (duplicates, supplier mismatch)."""
+    done = {
+        job.id: job.result for job in store.list() if job.status is JobStatus.DONE and job.result
+    }
     issues = [
-        IssueOut(document_id=job.id, issue=issue)
-        for job in store.list()
-        if job.result
-        for issue in job.result.issues
+        IssueOut(document_id=doc_id, issue=issue)
+        for doc_id, result in done.items()
+        for issue in result.issues
     ]
+    for doc_id, found in processor.cross_check(done).items():
+        issues.extend(IssueOut(document_id=doc_id, issue=issue) for issue in found)
     return IssuesResponse(issues=issues)

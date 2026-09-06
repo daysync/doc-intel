@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     llm_record: bool = False
     llm_replay: bool = False
     llm_fixtures_dir: str = "tests/fixtures/llm/smoke"
+    pipeline_config: str = "configs/default.yaml"
     database_url: str = "postgresql+psycopg://doc_intel:doc_intel@localhost:5433/doc_intel"
 
 

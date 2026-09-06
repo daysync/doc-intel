@@ -18,8 +18,8 @@ typecheck:  ## mypy strict
 dataset:    ## generate labeled synthetic documents into data/samples
 	uv run python -m doc_intel.dataset.generate --out data/samples --n 24 --seed 7
 
-eval:       ## run the golden set, log to MLflow (Stage 4)
-	@echo "make eval: arrives in Stage 4"
+eval:       ## run the pipeline over data/samples and report field accuracy
+	uv run python -m doc_intel.eval.run --samples data/samples --config configs/default.yaml
 
 llm-smoke:  ## same prompt across providers, compare cost and latency
 	uv run python -m doc_intel.llm.smoke

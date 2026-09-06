@@ -64,3 +64,17 @@ async def test_engine_falls_back_to_vision_when_threshold_is_high() -> None:
         pytest.skip(f"no fixture yet: {error}")
     assert result.engine == "vision"
     assert "INV-" in result.text or "-2026-" in result.text
+
+
+async def test_engine_keeps_tesseract_when_vision_fails() -> None:
+    from doc_intel.llm.errors import StructuredOutputError
+    from tests.llm.fakes import FakeLLM
+
+    broken = VisionTranscriber(FakeLLM('{"text": "unterminated'), MODEL)
+    result = await Ocr(vision=broken, fallback_below=101.0).run([_small_page()])
+    assert result.engine == "tesseract"
+    assert result.fallback_error and "validation" in result.fallback_error
+    assert result.text  # Tesseract's reading survived
+    assert (
+        StructuredOutputError.__name__ in result.fallback_error or "failed" in result.fallback_error
+    )
