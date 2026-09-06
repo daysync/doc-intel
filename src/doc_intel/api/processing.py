@@ -1,8 +1,8 @@
 """Background processing of ingested documents.
 
-``POST /ingest`` returns 202 immediately; this module runs the pipeline afterwards and
-records the outcome on the job. A failure is stored, never raised, so a bad document can
-never take the API down.
+``POST /ingest`` returns 202 immediately; this module runs the pipeline afterwards, records
+the outcome on the job, and makes the document searchable. A failure is stored, never
+raised, so a bad document can never take the API down.
 """
 
 import logging
@@ -27,8 +27,19 @@ class DocumentProcessor(Protocol):
     ) -> dict[str, list[ValidationIssue]]: ...
 
 
+class DocumentIndexer(Protocol):
+    """Makes a processed document searchable. ``rag.index.Indexer`` satisfies it."""
+
+    async def index(self, result: ProcessResult) -> object: ...
+
+
 async def process_job(
-    store: JobStore, processor: DocumentProcessor, job_id: str, data: bytes, mime: str
+    store: JobStore,
+    processor: DocumentProcessor,
+    job_id: str,
+    data: bytes,
+    mime: str,
+    indexer: DocumentIndexer | None = None,
 ) -> None:
     await store.set_status(job_id, JobStatus.PROCESSING)
     try:
@@ -38,3 +49,8 @@ async def process_job(
         await store.set_status(job_id, JobStatus.FAILED, error=f"{type(error).__name__}: {error}")
         return
     await store.set_status(job_id, JobStatus.DONE, result=result)
+    if indexer is not None:
+        try:
+            await indexer.index(result)
+        except Exception:
+            logger.exception("indexing %s failed", job_id)

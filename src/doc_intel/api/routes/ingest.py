@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, UploadFile, status
 
-from doc_intel.api.deps import get_processor, get_store
+from doc_intel.api.deps import get_indexer, get_processor, get_store
 from doc_intel.api.jobs import JobStore
-from doc_intel.api.processing import DocumentProcessor, process_job
+from doc_intel.api.processing import DocumentIndexer, DocumentProcessor, process_job
 from doc_intel.api.schemas import IngestResponse
 from doc_intel.ocr.image import IMAGE_MIMES, PDF_MIME
 
@@ -19,6 +19,7 @@ async def ingest(
     background: BackgroundTasks,
     store: Annotated[JobStore, Depends(get_store)],
     processor: Annotated[DocumentProcessor, Depends(get_processor)],
+    indexer: Annotated[DocumentIndexer | None, Depends(get_indexer)],
 ) -> IngestResponse:
     """Accept one document, queue it, and process it in the background."""
     mime = file.content_type or ""
@@ -29,5 +30,5 @@ async def ingest(
         )
     payload = await file.read()
     job = await store.create(filename=file.filename or "upload", mime=mime, size_bytes=len(payload))
-    background.add_task(process_job, store, processor, job.id, payload, mime)
+    background.add_task(process_job, store, processor, job.id, payload, mime, indexer)
     return IngestResponse(job_id=job.id, status=job.status)

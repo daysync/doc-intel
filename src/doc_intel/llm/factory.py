@@ -5,6 +5,7 @@ from pathlib import Path
 from doc_intel.api.settings import Settings
 from doc_intel.llm.anthropic import AnthropicLLM
 from doc_intel.llm.base import LLM
+from doc_intel.llm.embeddings import Embedder, OllamaEmbedder, OpenAIEmbedder, RecordedEmbedder
 from doc_intel.llm.errors import LLMError
 from doc_intel.llm.log import CallLog
 from doc_intel.llm.ollama import OllamaLLM
@@ -42,3 +43,29 @@ def build_llm(settings: Settings, provider: str | None = None, log: CallLog | No
     if settings.llm_replay:
         return RecordedLLM(fixtures, inner=None, priced_as=provider, log=log)
     return build_live_llm(settings, provider, log)
+
+
+def build_embedder(
+    settings: Settings, provider: str, model: str, dimensions: int, log: CallLog | None = None
+) -> Embedder:
+    """Live embedder, or a RecordedEmbedder around it under LLM_RECORD / LLM_REPLAY."""
+    live: Embedder
+    match provider:
+        case "ollama":
+            live = OllamaEmbedder(model, dimensions, host=settings.ollama_host, log=log)
+        case "openai":
+            if settings.openai_api_key is None:
+                raise LLMError("OPENAI_API_KEY is not set")
+            live = OpenAIEmbedder(
+                model, dimensions, api_key=settings.openai_api_key.get_secret_value(), log=log
+            )
+        case _:
+            raise LLMError(f"unknown embeddings provider {provider!r}; expected ollama or openai")
+    fixtures = Path(settings.llm_fixtures_dir).parent / "embeddings"
+    if settings.llm_record:
+        return RecordedEmbedder(fixtures, inner=live, log=log)
+    if settings.llm_replay:
+        return RecordedEmbedder(
+            fixtures, inner=None, model=model, dimensions=dimensions, priced_as=provider, log=log
+        )
+    return live

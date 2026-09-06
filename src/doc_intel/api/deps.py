@@ -3,7 +3,7 @@
 from fastapi import HTTPException, Request, status
 
 from doc_intel.api.jobs import JobStore
-from doc_intel.api.processing import DocumentProcessor
+from doc_intel.api.processing import DocumentIndexer, DocumentProcessor
 
 
 def get_store(request: Request) -> JobStore:
@@ -16,3 +16,8 @@ def get_processor(request: Request) -> DocumentProcessor:
     if processor is None:
         raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "no pipeline configured")
     return processor
+
+
+def get_indexer(request: Request) -> DocumentIndexer | None:
+    indexer: DocumentIndexer | None = request.app.state.indexer
+    return indexer

@@ -48,12 +48,20 @@ class ExtractionConfig(BaseModel):
     max_repairs: int = 1
 
 
+class EmbeddingsConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    provider: str = "ollama"
+    model: str = "nomic-embed-text"
+    dimensions: int = 768
+
+
 class PipelineConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = "default"
     llm: LLMConfig = LLMConfig()
     ocr: OcrConfig = OcrConfig()
     extraction: ExtractionConfig = ExtractionConfig()
+    embeddings: EmbeddingsConfig = EmbeddingsConfig()
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "PipelineConfig":
