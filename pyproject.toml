@@ -1,6 +1,6 @@
 [project]
 name = "daysync-doc-intel"
-version = "0.0.1"
+version = "0.1.0"
 description = "Document intelligence for supplier invoices and contracts: OCR, LLM extraction, validation, RAG, evals"
 readme = "README.md"
 license = "MIT"
