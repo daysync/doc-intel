@@ -31,3 +31,11 @@ class FakeProcessor:
 
     def cross_check(self, results: Mapping[str, ProcessResult]) -> dict[str, list[ValidationIssue]]:
         return cross_document_issues({doc_id: result.invoice for doc_id, result in results.items()})
+
+
+class FakeIndexer:
+    def __init__(self) -> None:
+        self.indexed: list[str] = []
+
+    async def index(self, result: ProcessResult) -> None:
+        self.indexed.append(result.document_id)

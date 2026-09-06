@@ -1,4 +1,4 @@
-.PHONY: api test lint typecheck fmt dataset eval llm-smoke
+.PHONY: api test lint typecheck fmt dataset eval eval-retrieval llm-smoke
 
 api:        ## run the API with autoreload on :8000
 	uv run uvicorn doc_intel.api.app:app --factory --reload --port 8000
@@ -23,3 +23,6 @@ eval:       ## run the pipeline over data/samples and report field accuracy
 
 llm-smoke:  ## same prompt across providers, compare cost and latency
 	uv run python -m doc_intel.llm.smoke
+
+eval-retrieval:  ## recall@5 and MRR of hybrid retrieval over ground-truth questions (needs Postgres)
+	uv run python -m doc_intel.eval.retrieval --samples data/samples --config configs/default.yaml

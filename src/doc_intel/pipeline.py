@@ -48,12 +48,20 @@ class ExtractionConfig(BaseModel):
     max_repairs: int = 1
 
 
+class EmbeddingsConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    provider: str = "ollama"
+    model: str = "nomic-embed-text"
+    dimensions: int = 768
+
+
 class PipelineConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str = "default"
     llm: LLMConfig = LLMConfig()
     ocr: OcrConfig = OcrConfig()
     extraction: ExtractionConfig = ExtractionConfig()
+    embeddings: EmbeddingsConfig = EmbeddingsConfig()
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "PipelineConfig":
@@ -111,6 +119,7 @@ class Pipeline:
             timings=Timings(
                 ocr_ms=ocr_ms, extract_ms=extract_ms, validate_ms=validate_ms, total_ms=_ms(clock)
             ),
+            ocr_pages=[page.text for page in ocr.pages],
             ocr_engine=ocr.engine,
             model=self.config.llm.model,
             repairs=extraction.repairs,

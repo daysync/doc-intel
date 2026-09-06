@@ -1,11 +1,13 @@
 """Ingestion jobs and the store that tracks them.
 
-Stage 0 keeps jobs in memory so the API is runnable without a database. Stage 3 swaps in
-a Postgres-backed store behind the same four methods; the routes never change.
+Two stores implement the same async ``JobStore`` protocol: ``InMemoryJobStore`` for tests
+and keyless local runs, ``db.store.PostgresJobStore`` for everything that should survive a
+restart. The routes only see the protocol.
 """
 
 from datetime import UTC, datetime
 from enum import StrEnum
+from typing import Protocol
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict
@@ -33,11 +35,27 @@ class Job(BaseModel):
     error: str | None = None
 
 
+class JobStore(Protocol):
+    async def create(self, filename: str, mime: str, size_bytes: int) -> Job: ...
+
+    async def get(self, job_id: str) -> Job | None: ...
+
+    async def list(self) -> list[Job]: ...
+
+    async def set_status(
+        self,
+        job_id: str,
+        status: JobStatus,
+        result: ProcessResult | None = None,
+        error: str | None = None,
+    ) -> Job: ...
+
+
 class InMemoryJobStore:
     def __init__(self) -> None:
         self._jobs: dict[str, Job] = {}
 
-    def create(self, filename: str, mime: str, size_bytes: int) -> Job:
+    async def create(self, filename: str, mime: str, size_bytes: int) -> Job:
         job = Job(
             id=uuid4().hex,
             filename=filename,
@@ -49,13 +67,13 @@ class InMemoryJobStore:
         self._jobs[job.id] = job
         return job
 
-    def get(self, job_id: str) -> Job | None:
+    async def get(self, job_id: str) -> Job | None:
         return self._jobs.get(job_id)
 
-    def list(self) -> list[Job]:
+    async def list(self) -> list[Job]:
         return sorted(self._jobs.values(), key=lambda job: job.created_at)
 
-    def set_status(
+    async def set_status(
         self,
         job_id: str,
         status: JobStatus,

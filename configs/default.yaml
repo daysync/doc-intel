@@ -15,3 +15,8 @@ extraction:
   strategy: both            # text | image | both
   max_tokens: 4096
   max_repairs: 1            # validation-feedback rounds before giving up
+
+embeddings:
+  provider: ollama          # ollama | openai
+  model: nomic-embed-text
+  dimensions: 768           # must match vector(768) in db/schema.sql

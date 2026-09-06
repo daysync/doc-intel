@@ -85,3 +85,11 @@ def test_metrics_shape_matches_readme_table(client: TestClient) -> None:
 
 def test_each_test_gets_a_fresh_store(client: TestClient) -> None:
     assert client.get("/documents").json() == {"documents": []}
+
+
+def test_processed_documents_are_indexed(client: TestClient) -> None:
+    job_id = client.post(
+        "/ingest", files={"file": ("a.pdf", b"%PDF-1.4", "application/pdf")}
+    ).json()["job_id"]
+    client.post("/ingest", files={"file": ("bad.pdf", b"BOOM", "application/pdf")})
+    assert client.app.state.indexer.indexed == [job_id]  # type: ignore[attr-defined]

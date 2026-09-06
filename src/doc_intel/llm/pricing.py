@@ -45,6 +45,9 @@ PRICES: dict[tuple[str, str], ModelPrice] = {
     ("openai", "gpt-5.4"): _price("2.50", "15", "0.25"),
     ("openai", "gpt-5.4-mini"): _price("0.75", "4.50", "0.075"),
     ("openai", "gpt-5-mini"): _price("0.25", "2", "0.025"),
+    # OpenAI embeddings (input only), same page and date.
+    ("openai", "text-embedding-3-small"): _price("0.02", "0", "0.02"),
+    ("openai", "text-embedding-3-large"): _price("0.13", "0", "0.13"),
 }
 
 # Providers whose calls cost nothing per token (local inference, fixtures).
