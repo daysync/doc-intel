@@ -20,3 +20,9 @@ embeddings:
   provider: ollama          # ollama | openai
   model: nomic-embed-text
   dimensions: 768           # must match vector(768) in db/schema.sql
+
+rag:
+  k: 5                      # excerpts handed to the answer model
+  candidates: 20            # fused candidates considered before rerank
+  scope_by_number: true     # restrict search to the invoice a question names
+  rerank: false             # one extra LLM call per question; measured by make eval-answers

@@ -26,6 +26,7 @@ from doc_intel.models import ProcessResult, Timings, ValidationIssue
 from doc_intel.ocr.engine import Ocr
 from doc_intel.ocr.image import load_pages
 from doc_intel.ocr.vision import VisionTranscriber
+from doc_intel.rag.qa import RagConfig
 
 
 class LLMConfig(BaseModel):
@@ -62,6 +63,7 @@ class PipelineConfig(BaseModel):
     ocr: OcrConfig = OcrConfig()
     extraction: ExtractionConfig = ExtractionConfig()
     embeddings: EmbeddingsConfig = EmbeddingsConfig()
+    rag: RagConfig = RagConfig()
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "PipelineConfig":

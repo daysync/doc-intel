@@ -8,9 +8,9 @@ from doc_intel.api.app import create_app
 
 @pytest.fixture
 def client() -> Iterator[TestClient]:
-    from tests.api.fakes import FakeIndexer, FakeProcessor
+    from tests.api.fakes import FakeIndexer, FakeProcessor, FakeQa
 
-    app = create_app(FakeProcessor(), indexer=FakeIndexer())
+    app = create_app(FakeProcessor(), indexer=FakeIndexer(), qa=FakeQa())
     with TestClient(app) as test_client:
         yield test_client
 

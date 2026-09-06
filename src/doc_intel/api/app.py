@@ -22,6 +22,7 @@ def create_app(
     processor: DocumentProcessor | None = None,
     store: JobStore | None = None,
     indexer: DocumentIndexer | None = None,
+    qa: object | None = None,
 ) -> FastAPI:
     application = FastAPI(
         title="doc-intel",
@@ -31,6 +32,7 @@ def create_app(
     application.state.jobs = store or InMemoryJobStore()
     application.state.processor = processor
     application.state.indexer = indexer
+    application.state.qa = qa
     for module in (health, ingest, documents, ask, metrics):
         application.include_router(module.router)
     return application
@@ -42,7 +44,10 @@ def app() -> FastAPI:
     from doc_intel.db.store import PostgresJobStore
     from doc_intel.llm.factory import build_embedder
     from doc_intel.pipeline import Pipeline
-    from doc_intel.rag.index import Indexer
+    from doc_intel.rag.answer import Answerer
+    from doc_intel.rag.index import Indexer, Retriever
+    from doc_intel.rag.qa import QuestionAnswering
+    from doc_intel.rag.rerank import Reranker
 
     settings = get_settings()
     pipeline = Pipeline.from_config(settings.pipeline_config, settings)
@@ -59,6 +64,13 @@ def app() -> FastAPI:
         yield
         await pool.close()
 
-    application = create_app(pipeline, PostgresJobStore(pool), Indexer(pool, embedder))
+    rag = pipeline.config.rag
+    qa = QuestionAnswering(
+        Retriever(pool, embedder, candidates=rag.candidates),
+        Answerer(pipeline.llm, pipeline.config.llm.model),
+        Reranker(pipeline.llm, pipeline.config.llm.model) if rag.rerank else None,
+        rag,
+    )
+    application = create_app(pipeline, PostgresJobStore(pool), Indexer(pool, embedder), qa)
     application.router.lifespan_context = lifespan
     return application

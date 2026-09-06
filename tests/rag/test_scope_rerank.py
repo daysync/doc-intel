@@ -19,6 +19,7 @@ from tests.rag.test_index import _stored
         ("Who supplied F-2026-3165?", ["F-2026-3165"]),
         ("How much was invoice 4587?", ["4587"]),
         ("Сума рахунку SF-2026-4609?", ["SF-2026-4609"]),
+        ("grand total of INV-7001", ["INV-7001"]),
         ("What did we buy last month?", []),
     ],
 )

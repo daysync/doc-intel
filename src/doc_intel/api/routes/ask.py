@@ -1,19 +1,49 @@
-from decimal import Decimal
+from typing import Annotated, Protocol
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
-from doc_intel.api.schemas import AskRequest, AskResponse
+from doc_intel.api.schemas import AskRequest, AskResponse, Citation
+from doc_intel.rag.qa import QaResult
 
 router = APIRouter()
 
-NOT_IN_DOCUMENTS = "Not in the documents."
+
+class QuestionAnswerer(Protocol):
+    async def ask(self, question: str, k: int | None = None) -> QaResult: ...
+
+
+def get_qa(request: Request) -> QuestionAnswerer:
+    qa: QuestionAnswerer | None = request.app.state.qa
+    if qa is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, "question answering is not configured"
+        )
+    return qa
 
 
 @router.post("/ask")
-def ask(body: AskRequest) -> AskResponse:
-    """Answer a question over the corpus with citations. Retrieval arrives in Stage 3.
+async def ask(body: AskRequest, qa: Annotated[QuestionAnswerer, Depends(get_qa)]) -> AskResponse:
+    """Answer over the indexed documents with verified citations.
 
-    Until then every question gets the honest answer, which is also the answer the real
-    pipeline must be able to give: the documents do not contain it.
+    "Not in the documents." is a real answer: the model declined because the excerpts do
+    not contain it, and no citation is attached.
     """
-    return AskResponse(answer=NOT_IN_DOCUMENTS, citations=[], cost_usd=Decimal(0))
+    result = await qa.ask(body.question, k=body.k)
+    return AskResponse(
+        answer=result.answer,
+        citations=[
+            Citation(
+                document_id=c.document_id,
+                page=c.page,
+                snippet=c.snippet,
+                chunk_id=c.chunk_id,
+                kind=c.kind,
+            )
+            for c in result.citations
+        ],
+        cost_usd=result.cost_usd,
+        not_in_documents=result.not_in_documents,
+        supported=result.supported,
+        confidence=result.confidence,
+        scope=result.scope,
+    )
