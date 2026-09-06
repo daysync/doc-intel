@@ -47,18 +47,27 @@ class AskRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     question: str = Field(min_length=1, max_length=2000)
+    k: int = Field(default=5, ge=1, le=20)
 
 
 class Citation(BaseModel):
     document_id: str
     page: int
     snippet: str
+    chunk_id: int | None = None
+    kind: str | None = None
 
 
 class AskResponse(BaseModel):
     answer: str
     citations: list[Citation]
     cost_usd: Decimal
+    not_in_documents: bool = False
+    supported: bool = True
+    confidence: float | None = None
+    scope: list[str] | None = Field(
+        default=None, description="Documents the question was scoped to"
+    )
 
 
 class MetricsResponse(BaseModel):

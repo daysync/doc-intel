@@ -60,10 +60,31 @@ def test_issues_include_cross_document_duplicates(client: TestClient) -> None:
     assert issues[0]["issue"]["related_document_ids"] == [b]
 
 
-def test_ask_answers_not_in_documents(client: TestClient) -> None:
+def test_ask_returns_a_cited_answer(client: TestClient) -> None:
     response = client.post("/ask", json={"question": "What is the total of invoice INV-1042?"})
     assert response.status_code == 200
-    assert response.json() == {"answer": "Not in the documents.", "citations": [], "cost_usd": "0"}
+    body = response.json()
+    assert body["answer"] == "The grand total is 78.60 EUR."
+    assert body["citations"] == [
+        {
+            "document_id": "doc-a",
+            "page": 1,
+            "snippet": "grand total 78.60 EUR",
+            "chunk_id": 7,
+            "kind": "totals",
+        }
+    ]
+    assert body["supported"] and not body["not_in_documents"] and body["scope"] == ["doc-a"]
+    assert body["cost_usd"] == "0.001"
+
+
+def test_ask_answers_not_in_documents(client: TestClient) -> None:
+    body = client.post("/ask", json={"question": "Who is the CEO?"}).json()
+    assert (
+        body["answer"] == "Not in the documents."
+        and body["not_in_documents"]
+        and body["citations"] == []
+    )
 
 
 def test_ask_requires_a_question(client: TestClient) -> None:

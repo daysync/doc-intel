@@ -13,7 +13,7 @@ DaySync is a booking and business-management platform for salons. Salon owners r
 | 0 | Project skeleton, models, API, CI | done |
 | 1 | LLM wrapper: OpenAI / Anthropic / Ollama, structured output, cost and latency logging | done |
 | 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | done |
-| 3 | RAG: structure-aware chunking, pgvector hybrid search, reranking, cited answers | 3a done (persistence, chunking, hybrid retrieval); 3b in progress |
+| 3 | RAG: structure-aware chunking, pgvector hybrid search, reranking, cited answers | done |
 | 4 | Evals: Ragas, LLM-as-judge, MLflow tracking, A/B of prompts and models | – |
 | 5 | Open-source models: local inference, LoRA fine-tune on extraction | – |
 | 6 | AWS deploy, eval in CI on PRs, monitoring | – |
@@ -22,7 +22,8 @@ Latest results (updated with each `make eval` run):
 
 | Configuration | Field accuracy | Retrieval recall@5 | Faithfulness | Cost / doc | p95 latency |
 |---|---|---|---|---|---|
-| `default` — Ollama qwen2.5vl:3b + nomic-embed-text, strategy `both`, 24 synthetic docs (2026-09-06, Apple Silicon laptop) | 69% (en 86 · ru 75 · uk 69 · ka 41) | 78% (MRR 0.57; ground-truth index, 96 questions) | – | $0 | 82 s |
+| `default` — Ollama qwen2.5vl:3b + nomic-embed-text, strategy `both`, 24 synthetic docs (2026-09-06, Apple Silicon laptop) | 69% (en 86 · ru 75 · uk 69 · ka 41) | 78% unscoped / 99% scoped to the named invoice (MRR 0.57; ground-truth index, 96 questions) | answers 89% correct + cited; 97% citations verified; 75% correct declines | $0 | 82 s / doc; 2.9 s / question |
+| `rerank` — same, LLM rerank on | – | 99% scoped | answers 90%; 98% verified | $0 | 4.2 s / question |
 
 Experiment write-ups live in `docs/experiments/`.
 
