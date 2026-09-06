@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from psycopg_pool import AsyncConnectionPool
 
 from doc_intel.dataset.generate import generate_dataset
@@ -34,7 +35,14 @@ def test_report_metrics() -> None:
 
 
 @requires_postgres
-async def test_end_to_end_on_a_generated_dataset(tmp_path: Path, pool: AsyncConnectionPool) -> None:
+async def test_end_to_end_on_a_generated_dataset(
+    tmp_path: Path, pool: AsyncConnectionPool, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from doc_intel.api.settings import get_settings
+    from tests.conftest import TEST_DATABASE_URL
+
+    monkeypatch.setenv("DATABASE_URL", TEST_DATABASE_URL)
+    get_settings.cache_clear()
     generate_dataset(tmp_path, n=8, seed=5)
     report = await run(tmp_path, Path("configs/default.yaml"), k=5, embedder=HashEmbedder())
     assert len(report.results) == 32
