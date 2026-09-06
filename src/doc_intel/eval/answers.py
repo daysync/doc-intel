@@ -25,6 +25,7 @@ from doc_intel.eval.judge import Judge
 from doc_intel.eval.ragas_style import RagasStyle
 from doc_intel.eval.retrieval import _as_result, _rank
 from doc_intel.eval.stats import bootstrap_mean
+from doc_intel.eval.tracking import flatten_config, format_diff, log_run, previous_metrics
 from doc_intel.llm.errors import LLMError
 from doc_intel.llm.factory import build_embedder, build_llm
 from doc_intel.models import Invoice
@@ -384,9 +385,7 @@ def print_report(report: AnswersReport) -> None:
         if o.scoring_error or (o.judge_reason or "").startswith("judge failed")
     ]
     if scoring:
-        print(
-            print(f"  scoring failures      {len(scoring)} (judge/Ragas call failed)")
-        )
+        print(print(f"  scoring failures      {len(scoring)} (judge/Ragas call failed)"))
 
 
 def main() -> None:
@@ -396,11 +395,24 @@ def main() -> None:
     parser.add_argument("--samples", type=Path, default=Path("data/samples"))
     parser.add_argument("--config", type=Path, default=Path("configs/default.yaml"))
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument(
+        "--no-judge", action="store_true", help="skip the judge and Ragas-style metrics"
+    )
+    parser.add_argument("--no-track", action="store_true", help="do not log the run to MLflow")
     args = parser.parse_args()
-    report = asyncio.run(run(args.samples, args.config, args.limit))
+    report = asyncio.run(
+        run(args.samples, args.config, args.limit, judge_enabled=not args.no_judge)
+    )
     out = args.samples / f"eval-answers-{report.config}.json"
     out.write_text(report.model_dump_json(indent=2) + "\n")
     print_report(report)
+    if not args.no_track:
+        config = PipelineConfig.from_yaml(args.config)
+        previous = previous_metrics("answers", report.config)
+        run_id = log_run(
+            "answers", report.config, flatten_config(config.model_dump()), report.metrics(), out
+        )
+        print(f"\nmlflow run {run_id}\n{format_diff(report.metrics(), previous)}")
     print(
         json.dumps(
             {
