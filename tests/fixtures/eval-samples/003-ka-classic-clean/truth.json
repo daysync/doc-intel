@@ -1,0 +1,153 @@
+{
+  "supplier": {
+    "name": {
+      "value": "პროფკოსმეტიკა",
+      "quote": "პროფკოსმეტიკა",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "521178502",
+      "quote": "521178502",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "აღმაშენებლის 4, ბათუმი",
+      "quote": "აღმაშენებლის 4, ბათუმი",
+      "confidence": 1.0
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "ბარბერშოპი წერტილი",
+      "quote": "ბარბერშოპი წერტილი",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "171607909",
+      "quote": "171607909",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "ჭავჭავაძის 88, ქუთაისი",
+      "quote": "ჭავჭავაძის 88, ქუთაისი",
+      "confidence": 1.0
+    }
+  },
+  "number": {
+    "value": "F-2026-9665",
+    "quote": "F-2026-9665",
+    "confidence": 1.0
+  },
+  "issue_date": {
+    "value": "2026-06-19",
+    "quote": "19.06.2026",
+    "confidence": 1.0
+  },
+  "due_date": {
+    "value": "2026-07-19",
+    "quote": "19.07.2026",
+    "confidence": 1.0
+  },
+  "currency": {
+    "value": "GEL",
+    "quote": "GEL",
+    "confidence": 1.0
+  },
+  "language": {
+    "value": "ka",
+    "quote": "ka",
+    "confidence": 1.0
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "არგანის შამპუნი 1ლ",
+        "quote": "არგანის შამპუნი 1ლ",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "6",
+        "quote": "6",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "ც",
+        "quote": "ც",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "52.58",
+        "quote": "52,58",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "315.48",
+        "quote": "315,48",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "გელის ბაზა 15მლ",
+        "quote": "გელის ბაზა 15მლ",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "1",
+        "quote": "1",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "შეკვრა",
+        "quote": "შეკვრა",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "13.76",
+        "quote": "13,76",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "13.76",
+        "quote": "13,76",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "taxes": [
+    {
+      "name": {
+        "value": "დღგ",
+        "quote": "დღგ",
+        "confidence": 1.0
+      },
+      "rate": {
+        "value": "0.18",
+        "quote": "18%",
+        "confidence": 1.0
+      },
+      "amount": {
+        "value": "59.26",
+        "quote": "59,26",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "totals": {
+    "subtotal": {
+      "value": "329.24",
+      "quote": "329,24",
+      "confidence": 1.0
+    },
+    "tax_total": {
+      "value": "59.26",
+      "quote": "59,26",
+      "confidence": 1.0
+    },
+    "grand_total": {
+      "value": "398.50",
+      "quote": "398,50",
+      "confidence": 1.0
+    }
+  }
+}

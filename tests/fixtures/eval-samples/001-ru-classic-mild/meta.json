@@ -1,0 +1,16 @@
+{
+  "id": "001-ru-classic-mild",
+  "language": "ru",
+  "layout": "classic",
+  "level": "mild",
+  "expected_issues": [],
+  "degradation": {
+    "level": "mild",
+    "angle_deg": -1.2507705570973568,
+    "perspective": 0.014937535806116859,
+    "blur_px": 0,
+    "noise_sigma": 3.126323461293467,
+    "lighting": 0.12195379050065953,
+    "jpeg_quality": 82
+  }
+}

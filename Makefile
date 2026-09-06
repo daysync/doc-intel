@@ -1,4 +1,4 @@
-.PHONY: api test lint typecheck fmt dataset eval eval-retrieval eval-answers llm-smoke eval-compare mlflow-ui
+.PHONY: api test lint typecheck fmt dataset eval eval-retrieval eval-answers llm-smoke eval-compare mlflow-ui eval-ci
 
 api:        ## run the API with autoreload on :8000
 	uv run uvicorn doc_intel.api.app:app --factory --reload --port 8000
@@ -35,3 +35,6 @@ eval-compare:  ## paired A/B of two answer-eval reports: make eval-compare A=dat
 
 mlflow-ui:  ## browse tracked eval runs at http://localhost:5000
 	MLFLOW_DISABLE_AGENT_HINT=1 uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+
+eval-ci:  ## reduced offline eval from recorded fixtures (what CI runs); record: LLM_RECORD=1 make eval-ci
+	uv run python -m doc_intel.eval.ci $(if $(UPDATE_BASELINE),--update-baseline,)

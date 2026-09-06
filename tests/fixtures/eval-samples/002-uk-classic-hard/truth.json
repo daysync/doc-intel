@@ -1,0 +1,180 @@
+{
+  "supplier": {
+    "name": {
+      "value": "ТОВ Салон Сервіс",
+      "quote": "ТОВ Салон Сервіс",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "79160110",
+      "quote": "79160110",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "вул. Соборна 88, Дніпро",
+      "quote": "вул. Соборна 88, Дніпро",
+      "confidence": 1.0
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "Барбершоп Крапка",
+      "quote": "Барбершоп Крапка",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "36469748",
+      "quote": "36469748",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "вул. Хрещатик 12, Київ",
+      "quote": "вул. Хрещатик 12, Київ",
+      "confidence": 1.0
+    }
+  },
+  "number": {
+    "value": "SF-2026-9414",
+    "quote": "SF-2026-9414",
+    "confidence": 1.0
+  },
+  "issue_date": {
+    "value": "2026-03-07",
+    "quote": "07.03.2026",
+    "confidence": 1.0
+  },
+  "due_date": {
+    "value": "2026-04-06",
+    "quote": "06.04.2026",
+    "confidence": 1.0
+  },
+  "currency": {
+    "value": "UAH",
+    "quote": "UAH",
+    "confidence": 1.0
+  },
+  "language": {
+    "value": "uk",
+    "quote": "uk",
+    "confidence": 1.0
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "Освітлююча пудра 500г",
+        "quote": "Освітлююча пудра 500г",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "3",
+        "quote": "3",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "шт",
+        "quote": "шт",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "52.42",
+        "quote": "52,42",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "157.26",
+        "quote": "157,26",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Кондиціонер кератин 1л",
+        "quote": "Кондиціонер кератин 1л",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "10",
+        "quote": "10",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "фл",
+        "quote": "фл",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "42.37",
+        "quote": "42,37",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "423.70",
+        "quote": "423,70",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Олія для машинки",
+        "quote": "Олія для машинки",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "4",
+        "quote": "4",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "фл",
+        "quote": "фл",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "27.46",
+        "quote": "27,46",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "109.84",
+        "quote": "109,84",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "taxes": [
+    {
+      "name": {
+        "value": "ПДВ",
+        "quote": "ПДВ",
+        "confidence": 1.0
+      },
+      "rate": {
+        "value": "0.20",
+        "quote": "20%",
+        "confidence": 1.0
+      },
+      "amount": {
+        "value": "138.16",
+        "quote": "138,16",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "totals": {
+    "subtotal": {
+      "value": "690.80",
+      "quote": "690,80",
+      "confidence": 1.0
+    },
+    "tax_total": {
+      "value": "138.16",
+      "quote": "138,16",
+      "confidence": 1.0
+    },
+    "grand_total": {
+      "value": "828.96",
+      "quote": "828,96",
+      "confidence": 1.0
+    }
+  }
+}
