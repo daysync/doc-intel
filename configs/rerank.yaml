@@ -1,0 +1,29 @@
+# Same as default.yaml with the LLM rerank switched on: one extra model call per question,
+# scoring all fused candidates. `make eval-answers` with --config configs/rerank.yaml measures
+# whether it earns its cost.
+name: rerank
+
+llm:
+  provider: ollama
+  model: qwen2.5vl:3b
+
+ocr:
+  fallback_below: 60
+  psm: 3
+  vision_model: null
+
+extraction:
+  strategy: both
+  max_tokens: 4096
+  max_repairs: 1
+
+embeddings:
+  provider: ollama
+  model: nomic-embed-text
+  dimensions: 768
+
+rag:
+  k: 5
+  candidates: 20
+  scope_by_number: true
+  rerank: true
