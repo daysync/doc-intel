@@ -20,6 +20,12 @@ class Settings(BaseSettings):
     llm_replay: bool = False
     llm_fixtures_dir: str = "tests/fixtures/llm/smoke"
     pipeline_config: str = "configs/default.yaml"
+
+    api_keys: SecretStr | None = None
+    """Comma-separated keys accepted in X-API-Key. Empty = open API (local development only)."""
+    max_upload_mb: int = 25
+    log_format: str = "text"
+    log_level: str = "INFO"
     database_url: str = "postgresql+psycopg://doc_intel:doc_intel@localhost:5433/doc_intel"
 
 

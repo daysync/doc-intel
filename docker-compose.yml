@@ -1,3 +1,6 @@
+# Local stack. `docker compose up -d postgres` for development against a host-run API;
+# `docker compose --profile full up -d` for the whole thing in containers, including Ollama.
+
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -15,5 +18,30 @@ services:
       timeout: 3s
       retries: 10
 
+  ollama:
+    profiles: ["full"]
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+  api:
+    profiles: ["full"]
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://doc_intel:doc_intel@postgres:5432/doc_intel
+      OLLAMA_HOST: http://ollama:11434
+      API_KEYS: ${API_KEYS:-}
+      LOG_FORMAT: json
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+
 volumes:
   pgdata:
+  ollama:
