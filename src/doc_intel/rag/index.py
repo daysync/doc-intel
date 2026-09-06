@@ -5,6 +5,7 @@ rank (exact tokens such as invoice numbers). Reciprocal rank fusion merges them 
 tuning weights: score = sum over lists of 1 / (k + rank).
 """
 
+import re
 from dataclasses import dataclass
 
 from pgvector import Vector
@@ -77,26 +78,46 @@ class Retriever:
         self.embedder = embedder
         self.candidates = candidates
 
-    async def search(self, query: str, k: int = 5) -> list[Hit]:
+    async def search(
+        self, query: str, k: int = 5, document_ids: list[str] | None = None
+    ) -> list[Hit]:
+        """Fused top-k. ``document_ids`` restricts both rankings to those documents."""
         (vector,) = await self.embedder.embed([query])
+        scope_sql = " AND document_id = ANY(%s)" if document_ids else ""
+        scope_params: tuple[object, ...] = (document_ids,) if document_ids else ()
         async with (
             self.pool.connection() as connection,
             connection.cursor(row_factory=dict_row) as cursor,
         ):
             await cursor.execute(
                 "SELECT id, document_id, page, kind, field_path, text FROM chunks "
-                "ORDER BY embedding <=> %s LIMIT %s",
-                (Vector(vector), self.candidates),
+                f"WHERE TRUE{scope_sql} ORDER BY embedding <=> %s LIMIT %s",
+                (*scope_params, Vector(vector), self.candidates),
             )
             by_vector = await cursor.fetchall()
             await cursor.execute(
                 "SELECT id, document_id, page, kind, field_path, text, ts_rank(tsv, q) AS rank "
-                "FROM chunks, websearch_to_tsquery('simple', %s) q WHERE tsv @@ q "
+                f"FROM chunks, websearch_to_tsquery('simple', %s) q WHERE tsv @@ q{scope_sql} "
                 "ORDER BY rank DESC LIMIT %s",
-                (query, self.candidates),
+                (query, *scope_params, self.candidates),
             )
             by_text = await cursor.fetchall()
         return fuse(by_vector, by_text, k)
+
+    async def documents_with_number(self, number: str) -> list[str]:
+        """Documents whose chunks carry this invoice number (separators and case ignored)."""
+        async with self.pool.connection() as connection, connection.cursor() as cursor:
+            await cursor.execute(
+                "SELECT DISTINCT document_id FROM chunks "
+                "WHERE regexp_replace(upper(metadata->>'number'), '[^A-Z0-9]', '', 'g') = %s",
+                (normalise_number(number),),
+            )
+            rows = await cursor.fetchall()
+        return [str(row[0]) for row in rows]
+
+
+def normalise_number(number: str) -> str:
+    return re.sub(r"[^A-Z0-9]", "", number.upper())
 
 
 def fuse(by_vector: list[dict[str, object]], by_text: list[dict[str, object]], k: int) -> list[Hit]:
