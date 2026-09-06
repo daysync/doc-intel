@@ -5,7 +5,7 @@ from psycopg_pool import AsyncConnectionPool
 from doc_intel.api.jobs import JobStatus
 from doc_intel.db.store import PostgresJobStore
 from doc_intel.models import ProcessResult, Timings
-from tests.db.conftest import requires_postgres
+from tests.conftest import requires_postgres
 from tests.models.factories import invoice
 
 pytestmark = requires_postgres
