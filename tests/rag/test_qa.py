@@ -33,7 +33,7 @@ async def test_ask_scopes_retrieves_and_cites(pool: AsyncConnectionPool) -> None
                 json.dumps(
                     {
                         "answer": f"see {first_id}",
-                        "citations": [{"chunk_id": first_id, "quote": quote}],
+                        "citations": [{"excerpt": first_id, "quote": quote}],
                         "not_in_documents": False,
                         "confidence": 0.8,
                     }

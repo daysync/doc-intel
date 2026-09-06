@@ -57,9 +57,7 @@ async def test_reranker_orders_by_model_relevance_then_fusion_score() -> None:
         Hit(3, "d", 1, "header", None, "c", 0.3),
     ]
     llm = FakeLLM(
-        json.dumps(
-            {"scores": [{"chunk_id": 3, "relevance": 0.9}, {"chunk_id": 2, "relevance": 0.9}]}
-        )
+        json.dumps({"scores": [{"excerpt": 3, "relevance": 0.9}, {"excerpt": 2, "relevance": 0.9}]})
     )
     ordered = await Reranker(llm, "m").rerank("q", hits, k=2)
     assert [h.chunk_id for h in ordered] == [2, 3]  # tie on relevance broken by fusion score

@@ -1,0 +1,18 @@
+{
+  "key": "512a68b4a7f89cadb572ca1536d360a4ce9124a18f023f86a4b3d433ebe7d555",
+  "recorded_at": "2026-09-06T18:26:24.576476Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-000-en-classic-clean, page 1, line_item:\nInvoice SF-2026-8321, line 1: Nail gel base 15ml; quantity 8 pcs; unit price 51.20; line total 409.60\n\n[2] document eval-000-en-cl",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"8 pcs\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"Nail gel base 15ml; quantity 8 pcs\"}],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 534,
+    "output_tokens": 51,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

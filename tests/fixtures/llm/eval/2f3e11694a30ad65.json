@@ -1,0 +1,18 @@
+{
+  "key": "2f3e11694a30ad65a3e3c335b43d33e09c20ca4bd3a86f23056780d11914f516",
+  "recorded_at": "2026-09-06T18:26:43.359007Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-000-en-classic-clean, page 1, header:\nInvoice SF-2026-8321. issued 14 Oct 2026. due 28 Oct 2026. currency USD. supplier Beauty Supplies Ltd, 88 King Road, London, tax id G",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"Not in the documents.\", \"citations\": [],\"not_in_documents\": true, \"confidence\": 0.0 }",
+    "input_tokens": 662,
+    "output_tokens": 32,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

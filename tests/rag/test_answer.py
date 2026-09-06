@@ -44,7 +44,7 @@ def _reply(
     return json.dumps(
         {
             "answer": answer,
-            "citations": [{"chunk_id": i, "quote": q} for i, q in citations],
+            "citations": [{"excerpt": i, "quote": q} for i, q in citations],
             "not_in_documents": not_in_documents,
             "confidence": confidence,
         }
@@ -61,11 +61,11 @@ def test_verify_keeps_only_quotes_found_in_their_chunk() -> None:
     answer = Answer(
         answer="x",
         citations=[
-            Citation(chunk_id=1, quote="grand total 78.60 EUR"),
-            Citation(chunk_id=1, quote="GRAND  total 78.60"),  # case and spacing tolerated
-            Citation(chunk_id=2, quote="grand total 78.60 EUR"),  # right text, wrong chunk
-            Citation(chunk_id=9, quote="anything"),  # unknown chunk
-            Citation(chunk_id=1, quote="totally invented"),
+            Citation(excerpt=1, quote="grand total 78.60 EUR"),
+            Citation(excerpt=1, quote="GRAND  total 78.60"),  # case and spacing tolerated
+            Citation(excerpt=2, quote="grand total 78.60 EUR"),  # right text, wrong chunk
+            Citation(excerpt=9, quote="anything"),  # unknown chunk
+            Citation(excerpt=1, quote="totally invented"),
         ],
         not_in_documents=False,
         confidence=0.9,

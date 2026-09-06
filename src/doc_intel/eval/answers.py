@@ -25,6 +25,7 @@ from doc_intel.eval.judge import Judge
 from doc_intel.eval.ragas_style import RagasStyle
 from doc_intel.eval.retrieval import _as_result, _rank
 from doc_intel.eval.stats import bootstrap_mean
+from doc_intel.llm.errors import LLMError
 from doc_intel.llm.factory import build_embedder, build_llm
 from doc_intel.models import Invoice
 from doc_intel.pipeline import PipelineConfig
@@ -63,6 +64,7 @@ class AnswerOutcome(BaseModel):
     judge_reason: str | None = None
     faithfulness: float | None = None
     answer_relevancy: float | None = None
+    scoring_error: str | None = None
 
 
 class AnswersReport(BaseModel):
@@ -317,13 +319,19 @@ async def run(
                 latency_ms=int((time.perf_counter() - started) * 1000),
             )
             if judge is not None and case.expected is not None and not result.not_in_documents:
-                verdict = await judge.grade(case.question, case.expected, result.answer)
-                outcome.judge_grade, outcome.judge_reason = verdict.grade, verdict.reason
+                try:
+                    verdict = await judge.grade(case.question, case.expected, result.answer)
+                    outcome.judge_grade, outcome.judge_reason = verdict.grade, verdict.reason
+                except LLMError as error:  # a judge that fails to answer is recorded, never fatal
+                    outcome.judge_reason = f"judge failed: {type(error).__name__}"
             if ragas is not None:
                 contexts = [h.text for h in result.hits]
-                scores = await ragas.score(case.question, result.answer, contexts)
-                outcome.faithfulness = scores.faithfulness
-                outcome.answer_relevancy = scores.answer_relevancy
+                try:
+                    scores = await ragas.score(case.question, result.answer, contexts)
+                    outcome.faithfulness = scores.faithfulness
+                    outcome.answer_relevancy = scores.answer_relevancy
+                except LLMError as error:
+                    outcome.scoring_error = f"{type(error).__name__}: {error}"[:200]
             outcomes.append(outcome)
             mark = (
                 "ok "
@@ -370,6 +378,15 @@ def print_report(report: AnswersReport) -> None:
     errors = [o for o in report.outcomes if o.error]
     if errors:
         print(f"  errors                {len(errors)} (first: {errors[0].error})")
+    scoring = [
+        o
+        for o in report.outcomes
+        if o.scoring_error or (o.judge_reason or "").startswith("judge failed")
+    ]
+    if scoring:
+        print(
+            print(f"  scoring failures      {len(scoring)} (judge/Ragas call failed)")
+        )
 
 
 def main() -> None:

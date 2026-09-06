@@ -1,0 +1,18 @@
+{
+  "key": "87a012f5040a3e348d9e7bc8cc0e70a17822c764548d3d800a444195ca2aeab2",
+  "recorded_at": "2026-09-06T18:26:37.608203Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-003-ka-classic-clean, page 1, totals:\nInvoice F-2026-9665 totals: subtotal 329,24; tax დღგ 18% = 59,26; grand total 398,50 GEL\n\n[2] document eval-003-ka-classic-clean, pag",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"398,50 GEL\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"Invoice F-2026-9665 totals: subtotal 329,24; tax დღგ 18% = 59,26; grand total 398,50 GEL\"}],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 597,
+    "output_tokens": 95,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

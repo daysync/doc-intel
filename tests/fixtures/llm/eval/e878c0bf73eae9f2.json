@@ -1,0 +1,18 @@
+{
+  "key": "e878c0bf73eae9f2b8f4978d88ed3ec8b9302851be6ca4e6b4114742c7989e0e",
+  "recorded_at": "2026-09-06T18:26:27.432338Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-001-ru-classic-mild, page 1, header:\nInvoice INV-2026-1151. issued 20.09.2026. due 04.10.2026. currency GEL. supplier ООО Бьюти Трейд, пр. Свободы 4, Одесса, tax id 231007",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"ООО Бьюти Трейд\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"ООО Бьюти Трейд, пр. Свободы 4, Одесса, tax id 2310077283.\"} ],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 620,
+    "output_tokens": 83,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

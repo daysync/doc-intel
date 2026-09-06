@@ -1,0 +1,18 @@
+{
+  "key": "64417880aafbd3f5746a4d283ebb77641062b5696ddbd2636543372f89ac9a22",
+  "recorded_at": "2026-09-06T18:26:45.212088Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-002-uk-classic-hard, page 1, header:\nInvoice SF-2026-9414. issued 07.03.2026. due 06.04.2026. currency UAH. supplier ТОВ Салон Сервіс, вул. Соборна 88, Дніпро, tax id 7916",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"вул. Соборна 88, Дніпро\",\"citations\": [  ],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 680,
+    "output_tokens": 40,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

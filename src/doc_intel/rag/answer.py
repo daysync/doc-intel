@@ -32,7 +32,7 @@ excerpts provided. Rules:
 class Citation(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    chunk_id: int
+    excerpt: int = Field(ge=1, description="The excerpt number as shown in the prompt")
     quote: str
 
 
@@ -71,9 +71,14 @@ class AnswerResult:
 
 
 def render_excerpts(hits: list[Hit]) -> str:
+    """Excerpts are numbered by position, 1..N, never by database id.
+
+    Positional numbers keep the prompt identical across re-indexing, so recorded fixtures
+    stay valid and the model sees small stable labels. ``verify_citations`` maps them back.
+    """
     return "\n\n".join(
-        f"[{hit.chunk_id}] document {hit.document_id}, page {hit.page}, {hit.kind}:\n{hit.text}"
-        for hit in hits
+        f"[{index}] document {hit.document_id}, page {hit.page}, {hit.kind}:\n{hit.text}"
+        for index, hit in enumerate(hits, start=1)
     )
 
 
@@ -82,12 +87,14 @@ def _norm(text: str) -> str:
 
 
 def verify_citations(answer: Answer, hits: list[Hit]) -> tuple[list[VerifiedCitation], int]:
-    """Keep citations whose quote appears in the cited chunk; count the rest as dropped."""
-    by_id = {hit.chunk_id: hit for hit in hits}
+    """Keep citations whose quote appears in the cited excerpt; count the rest as dropped.
+
+    ``citation.excerpt`` is the 1-based position in the prompt; it maps back to the hit.
+    """
     kept: list[VerifiedCitation] = []
     dropped = 0
     for citation in answer.citations:
-        hit = by_id.get(citation.chunk_id)
+        hit = hits[citation.excerpt - 1] if 0 < citation.excerpt <= len(hits) else None
         if (
             hit is None
             or not citation.quote.strip()

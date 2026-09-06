@@ -20,7 +20,7 @@ SYSTEM = (
 class ChunkScore(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    chunk_id: int
+    excerpt: int = Field(ge=1, description="The excerpt number as shown in the prompt")
     relevance: float = Field(ge=0.0, le=1.0)
 
 
@@ -55,8 +55,9 @@ class Reranker:
             max_tokens=self.max_tokens,
         )
         response = await self.llm.complete(request, Scores)
-        relevance = {score.chunk_id: score.relevance for score in response.output.scores}
+        relevance = {score.excerpt: score.relevance for score in response.output.scores}
         ordered = sorted(
-            hits, key=lambda hit: (-relevance.get(hit.chunk_id, 0.0), -hit.score, hit.chunk_id)
+            enumerate(hits, start=1),
+            key=lambda item: (-relevance.get(item[0], 0.0), -item[1].score, item[1].chunk_id),
         )
-        return ordered[:k]
+        return [hit for _, hit in ordered][:k]

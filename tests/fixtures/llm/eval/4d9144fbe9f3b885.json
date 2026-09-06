@@ -1,0 +1,18 @@
+{
+  "key": "4d9144fbe9f3b8855ce7db83b52eba94877f8b64d9f3fcb626fd7c8ec81bcf86",
+  "recorded_at": "2026-09-06T18:26:20.324701Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-000-en-classic-clean, page 1, totals:\nInvoice SF-2026-8321 totals: subtotal 1,626.69; tax VAT 20% = 325.34; grand total 1,952.03 USD\n\n[2] document eval-000-en-classic-clea",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"1,952.03 USD\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"Invoice SF-2026-8321 totals: subtotal 1,626.69; tax VAT 20% = 325.34; grand total 1,952.03 USD\"}],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 571,
+    "output_tokens": 97,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}
