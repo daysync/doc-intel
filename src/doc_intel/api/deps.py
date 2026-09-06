@@ -2,12 +2,12 @@
 
 from fastapi import HTTPException, Request, status
 
-from doc_intel.api.jobs import InMemoryJobStore
+from doc_intel.api.jobs import JobStore
 from doc_intel.api.processing import DocumentProcessor
 
 
-def get_store(request: Request) -> InMemoryJobStore:
-    store: InMemoryJobStore = request.app.state.jobs
+def get_store(request: Request) -> JobStore:
+    store: JobStore = request.app.state.jobs
     return store
 
 

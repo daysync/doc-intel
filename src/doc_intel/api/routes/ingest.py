@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, UploadFile, status
 
 from doc_intel.api.deps import get_processor, get_store
-from doc_intel.api.jobs import InMemoryJobStore
+from doc_intel.api.jobs import JobStore
 from doc_intel.api.processing import DocumentProcessor, process_job
 from doc_intel.api.schemas import IngestResponse
 from doc_intel.ocr.image import IMAGE_MIMES, PDF_MIME
@@ -17,7 +17,7 @@ ACCEPTED_MIME_TYPES = frozenset({PDF_MIME, *IMAGE_MIMES})
 async def ingest(
     file: UploadFile,
     background: BackgroundTasks,
-    store: Annotated[InMemoryJobStore, Depends(get_store)],
+    store: Annotated[JobStore, Depends(get_store)],
     processor: Annotated[DocumentProcessor, Depends(get_processor)],
 ) -> IngestResponse:
     """Accept one document, queue it, and process it in the background."""
@@ -28,6 +28,6 @@ async def ingest(
             detail=f"Unsupported type {mime!r}; accepted: {sorted(ACCEPTED_MIME_TYPES)}",
         )
     payload = await file.read()
-    job = store.create(filename=file.filename or "upload", mime=mime, size_bytes=len(payload))
+    job = await store.create(filename=file.filename or "upload", mime=mime, size_bytes=len(payload))
     background.add_task(process_job, store, processor, job.id, payload, mime)
     return IngestResponse(job_id=job.id, status=job.status)

@@ -9,7 +9,7 @@ import logging
 from collections.abc import Mapping
 from typing import Protocol
 
-from doc_intel.api.jobs import InMemoryJobStore, JobStatus
+from doc_intel.api.jobs import JobStatus, JobStore
 from doc_intel.models import ProcessResult, ValidationIssue
 
 logger = logging.getLogger("doc_intel.api")
@@ -28,13 +28,13 @@ class DocumentProcessor(Protocol):
 
 
 async def process_job(
-    store: InMemoryJobStore, processor: DocumentProcessor, job_id: str, data: bytes, mime: str
+    store: JobStore, processor: DocumentProcessor, job_id: str, data: bytes, mime: str
 ) -> None:
-    store.set_status(job_id, JobStatus.PROCESSING)
+    await store.set_status(job_id, JobStatus.PROCESSING)
     try:
         result = await processor.process(data, mime, document_id=job_id)
     except Exception as error:
         logger.exception("job %s failed", job_id)
-        store.set_status(job_id, JobStatus.FAILED, error=f"{type(error).__name__}: {error}")
+        await store.set_status(job_id, JobStatus.FAILED, error=f"{type(error).__name__}: {error}")
         return
-    store.set_status(job_id, JobStatus.DONE, result=result)
+    await store.set_status(job_id, JobStatus.DONE, result=result)
