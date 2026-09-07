@@ -1,0 +1,18 @@
+{
+  "key": "2cc91ddf84a32c182a4959b2dfc7a0a806f2e6d834fa12ef05aaaa7f69a1bc73",
+  "recorded_at": "2026-09-06T18:26:42.342508Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-001-ru-classic-mild, page 1, totals:\nInvoice INV-2026-1151 totals: subtotal 1 139,57; tax НДС 18% = 205,12; grand total 1 344,69 GEL\n\n[2] document eval-001-ru-classic-mild",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"Not in the documents.\", \"citations\": [],\"not_in_documents\": true, \"confidence\": 0.0 }",
+    "input_tokens": 561,
+    "output_tokens": 32,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

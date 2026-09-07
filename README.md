@@ -14,7 +14,7 @@ DaySync is a booking and business-management platform for salons. Salon owners r
 | 1 | LLM wrapper: OpenAI / Anthropic / Ollama, structured output, cost and latency logging | done |
 | 2 | OCR and extraction: synthetic dataset, field-level accuracy, cross-document validation | done |
 | 3 | RAG: structure-aware chunking, pgvector hybrid search, reranking, cited answers | done |
-| 4 | Evals: Ragas, LLM-as-judge, MLflow tracking, A/B of prompts and models | – |
+| 4 | Evals: Ragas, LLM-as-judge, MLflow tracking, A/B of prompts and models | done (Ragas-style metrics in-repo; see `docs/experiments/`) |
 | 5 | Open-source models: local inference, LoRA fine-tune on extraction | local inference done (Ollama); LoRA planned in `docs/experiments/0002` |
 | 6 | AWS deploy, eval in CI on PRs, monitoring | container + compose stack, eval in CI, API keys, JSON logs, readiness (`docs/deployment.md`); Terraform deferred |
 
@@ -22,10 +22,10 @@ Latest results (updated with each `make eval` run):
 
 | Configuration | Field accuracy | Retrieval recall@5 | Faithfulness | Cost / doc | p95 latency |
 |---|---|---|---|---|---|
-| `default` — Ollama qwen2.5vl:3b + nomic-embed-text, strategy `both`, 24 synthetic docs (2026-09-06, Apple Silicon laptop) | 69% (en 86 · ru 75 · uk 69 · ka 41) | 78% unscoped / 99% scoped to the named invoice (MRR 0.57; ground-truth index, 96 questions) | answers 89% correct + cited; 97% citations verified; 75% correct declines | $0 | 82 s / doc; 2.9 s / question |
-| `rerank` — same, LLM rerank on | – | 99% scoped | answers 90%; 98% verified | $0 | 4.2 s / question |
+| `default` — Ollama qwen2.5vl:3b + nomic-embed-text, strategy `both`, 24 synthetic docs (2026-09-06, Apple Silicon laptop) | 69% (en 86 · ru 75 · uk 69 · ka 41) | 78% unscoped / 99% scoped to the named invoice (MRR 0.57; ground-truth index, 96 questions) | answers 83% [75, 91] correct + cited (judge: 71%); faithfulness 0.92; relevancy 0.46; 92% citations verified; 75% correct declines | $0 | 82 s / doc; 3.5 s / question |
+| `rerank` — same, LLM rerank on | – | 99% scoped | answers 90%; 98% verified; paired diff vs default +1.1% [0.0, +3.3] → no measurable difference (`docs/experiments/0001`) | $0 | 4.2 s / question |
 
-Experiment write-ups live in `docs/experiments/`.
+Experiment write-ups live in `docs/experiments/`. Every `make eval*` run is tracked in MLflow (`make mlflow-ui`); answer accuracy carries a bootstrap 95% interval, and `make eval-compare` decides A/B questions on the paired difference. Faithfulness and answer relevancy follow the Ragas definitions, implemented in-repo because `ragas` 0.4 pins the OpenAI SDK below 3.
 
 ## What it does
 

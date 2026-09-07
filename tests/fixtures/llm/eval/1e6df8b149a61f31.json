@@ -1,0 +1,18 @@
+{
+  "key": "1e6df8b149a61f318ae8feab07beab248232b777ee445ceac0f892115dd67192",
+  "recorded_at": "2026-09-06T18:26:40.795275Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-003-ka-classic-clean, page 1, header:\nInvoice F-2026-9665. issued 19.06.2026. due 19.07.2026. currency GEL. supplier პროფკოსმეტიკა, აღმაშენებლის 4, ბათუმი, tax id 52117850",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"19.07.2026\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"due 19.07.2026.\"} ],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 594,
+    "output_tokens": 59,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

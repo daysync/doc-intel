@@ -1,0 +1,18 @@
+{
+  "key": "be956287e196114cd3520d1fa18b8d6441403ae575455b8730af47577c9096d9",
+  "recorded_at": "2026-09-06T18:26:31.587157Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-002-uk-classic-hard, page 1, totals:\nInvoice SF-2026-9414 totals: subtotal 690,80; tax ПДВ 20% = 138,16; grand total 828,96 UAH\n\n[2] document eval-002-uk-classic-hard, pag",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"828,96 UAH\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"Invoice SF-2026-9414 totals: subtotal 690,80; tax ПДВ 20% = 138,16; grand total 828,96 UAH\"}],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 625,
+    "output_tokens": 95,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

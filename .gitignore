@@ -16,6 +16,8 @@ dist/
 data/samples/*
 !data/samples/.gitkeep
 mlruns/
+mlflow.db
+mlartifacts/
 
 # OS / editors
 .DS_Store

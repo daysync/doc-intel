@@ -1,0 +1,18 @@
+{
+  "key": "ced9c13f1e0bd8ee361843bfdb7530b4f5f022c9b199a81227518e0937832ede",
+  "recorded_at": "2026-09-06T18:26:41.647271Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-003-ka-classic-clean, page 1, line_item:\nInvoice F-2026-9665, line 1: არგანის შამპუნი 1ლ; quantity 6 ც; unit price 52,58; line total 315,48\n\n[2] document eval-003-ka-class",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"6\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"quantity 6 ც\"}],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 614,
+    "output_tokens": 42,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

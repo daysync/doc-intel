@@ -1,0 +1,16 @@
+{
+  "id": "002-uk-classic-hard",
+  "language": "uk",
+  "layout": "classic",
+  "level": "hard",
+  "expected_issues": [],
+  "degradation": {
+    "level": "hard",
+    "angle_deg": -2.716036626748748,
+    "perspective": 0.036780990284720275,
+    "blur_px": 3,
+    "noise_sigma": 9.68131635542513,
+    "lighting": 0.5334720356985151,
+    "jpeg_quality": 56
+  }
+}

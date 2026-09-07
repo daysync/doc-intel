@@ -31,3 +31,7 @@ jobs:
       - run: make lint
       - run: make typecheck
       - run: make test
+      - run: make eval-ci
+        env:
+          LLM_REPLAY: "1"
+          LLM_FIXTURES_DIR: tests/fixtures/llm/eval

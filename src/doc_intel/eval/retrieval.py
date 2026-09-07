@@ -18,6 +18,7 @@ from pydantic import BaseModel, ConfigDict
 from doc_intel.api.settings import get_settings
 from doc_intel.dataset.generate import Manifest, load_truth
 from doc_intel.db.connection import apply_schema, make_pool
+from doc_intel.eval.tracking import flatten_config, format_diff, log_run, previous_metrics
 from doc_intel.llm.embeddings import Embedder
 from doc_intel.llm.factory import build_embedder
 from doc_intel.models import Invoice, ProcessResult, Timings
@@ -198,11 +199,21 @@ def main() -> None:
     parser.add_argument("--samples", type=Path, default=Path("data/samples"))
     parser.add_argument("--config", type=Path, default=Path("configs/default.yaml"))
     parser.add_argument("--k", type=int, default=5)
+    parser.add_argument("--no-track", action="store_true", help="do not log the run to MLflow")
     args = parser.parse_args()
     report = asyncio.run(run(args.samples, args.config, args.k))
     out = args.samples / f"eval-retrieval-{report.config}.json"
     out.write_text(report.model_dump_json(indent=2) + "\n")
     print_report(report)
+    if not args.no_track:
+        metrics = {"recall_at_k": report.recall_at_k(), "mrr": report.mrr()}
+        metrics.update({f"kind.{k}": v for k, v in report.by_kind().items()})
+        previous = previous_metrics("retrieval", report.config)
+        config = PipelineConfig.from_yaml(args.config)
+        run_id = log_run(
+            "retrieval", report.config, flatten_config(config.model_dump()), metrics, out
+        )
+        print(f"mlflow run {run_id}\n{format_diff(metrics, previous)}")
     print(
         json.dumps({"recall_at_k": round(report.recall_at_k(), 3), "mrr": round(report.mrr(), 3)})
     )

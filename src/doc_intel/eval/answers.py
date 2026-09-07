@@ -21,7 +21,12 @@ from doc_intel.api.settings import get_settings
 from doc_intel.dataset.generate import Manifest, load_truth
 from doc_intel.db.connection import apply_schema, make_pool
 from doc_intel.eval.accuracy import _NOT_LETTER
+from doc_intel.eval.judge import Judge
+from doc_intel.eval.ragas_style import RagasStyle
 from doc_intel.eval.retrieval import _as_result, _rank
+from doc_intel.eval.stats import bootstrap_mean
+from doc_intel.eval.tracking import flatten_config, format_diff, log_run, previous_metrics
+from doc_intel.llm.errors import LLMError
 from doc_intel.llm.factory import build_embedder, build_llm
 from doc_intel.models import Invoice
 from doc_intel.pipeline import PipelineConfig
@@ -56,6 +61,11 @@ class AnswerOutcome(BaseModel):
     cost_usd: Decimal
     latency_ms: int
     error: str | None = None
+    judge_grade: str | None = None
+    judge_reason: str | None = None
+    faithfulness: float | None = None
+    answer_relevancy: float | None = None
+    scoring_error: str | None = None
 
 
 class AnswersReport(BaseModel):
@@ -94,6 +104,39 @@ class AnswersReport(BaseModel):
         for kind in kinds:
             cases = [o for o in self.answerable() if o.case.kind == kind]
             out[kind] = sum(1 for o in cases if o.correct and o.supported) / len(cases)
+        return out
+
+    def judge_accuracy(self) -> float | None:
+        graded = [o for o in self.answerable() if o.judge_grade]
+        if not graded:
+            return None
+        return sum(1 for o in graded if o.judge_grade == "correct") / len(graded)
+
+    def mean_faithfulness(self) -> float | None:
+        values = [o.faithfulness for o in self.outcomes if o.faithfulness is not None]
+        return statistics.mean(values) if values else None
+
+    def mean_relevancy(self) -> float | None:
+        values = [o.answer_relevancy for o in self.outcomes if o.answer_relevancy is not None]
+        return statistics.mean(values) if values else None
+
+    def metrics(self) -> dict[str, float]:
+        out = {
+            "answer_accuracy": self.answer_accuracy(),
+            "decline_rate": self.decline_rate(),
+            "citation_support_rate": self.citation_support_rate(),
+            "scoped_recall_at_k": self.scoped_recall_at_k(),
+        }
+        for name, value in (
+            ("judge_accuracy", self.judge_accuracy()),
+            ("faithfulness", self.mean_faithfulness()),
+            ("answer_relevancy", self.mean_relevancy()),
+        ):
+            if value is not None:
+                out[name] = value
+        answerable = [o for o in self.answerable() if o.error is None]
+        if answerable:
+            out["p50_latency_ms"] = float(statistics.median(o.latency_ms for o in answerable))
         return out
 
 
@@ -189,10 +232,17 @@ def is_correct(case: AnswerCase, answer: str) -> bool:
     return False
 
 
-async def run(samples: Path, config_path: Path, limit: int | None = None) -> AnswersReport:
+async def run(
+    samples: Path, config_path: Path, limit: int | None = None, judge_enabled: bool = True
+) -> AnswersReport:
     settings = get_settings()
     config = PipelineConfig.from_yaml(config_path)
     llm = build_llm(settings, config.llm.provider)
+    judge: Judge | None = None
+    ragas: RagasStyle | None = None
+    if judge_enabled:
+        judge_llm = build_llm(settings, config.eval.judge_provider)
+        judge = Judge(judge_llm, config.eval.judge_model, model_under_test=config.llm.model)
     emb = config.embeddings
     embedder = build_embedder(settings, emb.provider, emb.model, emb.dimensions)
     manifest = Manifest.model_validate_json((samples / "manifest.json").read_text())
@@ -214,6 +264,8 @@ async def run(samples: Path, config_path: Path, limit: int | None = None) -> Ans
         for document_id, truth in truths.items():
             await indexer.index(_as_result(document_id, truth))
 
+        if judge is not None and config.eval.ragas:
+            ragas = RagasStyle(judge, embedder)
         retriever = Retriever(pool, embedder, candidates=config.rag.candidates)
         reranker = Reranker(llm, config.llm.model) if config.rag.rerank else None
         qa = QuestionAnswering(retriever, Answerer(llm, config.llm.model), reranker, config.rag)
@@ -267,6 +319,20 @@ async def run(samples: Path, config_path: Path, limit: int | None = None) -> Ans
                 cost_usd=result.cost_usd,
                 latency_ms=int((time.perf_counter() - started) * 1000),
             )
+            if judge is not None and case.expected is not None and not result.not_in_documents:
+                try:
+                    verdict = await judge.grade(case.question, case.expected, result.answer)
+                    outcome.judge_grade, outcome.judge_reason = verdict.grade, verdict.reason
+                except LLMError as error:  # a judge that fails to answer is recorded, never fatal
+                    outcome.judge_reason = f"judge failed: {type(error).__name__}"
+            if ragas is not None:
+                contexts = [h.text for h in result.hits]
+                try:
+                    scores = await ragas.score(case.question, result.answer, contexts)
+                    outcome.faithfulness = scores.faithfulness
+                    outcome.answer_relevancy = scores.answer_relevancy
+                except LLMError as error:
+                    outcome.scoring_error = f"{type(error).__name__}: {error}"[:200]
             outcomes.append(outcome)
             mark = (
                 "ok "
@@ -297,6 +363,14 @@ def print_report(report: AnswersReport) -> None:
     print(f"  citation support rate              {report.citation_support_rate():6.0%}")
     print(f"  scoped retrieval recall@k          {report.scoped_recall_at_k():6.0%}")
     print("  by kind  " + "  ".join(f"{k} {v:.0%}" for k, v in report.by_kind().items()))
+    ci = bootstrap_mean([1.0 if (o.correct and o.supported) else 0.0 for o in answerable])
+    print(f"  accuracy 95% CI       [{ci.low:.0%}, {ci.high:.0%}] over {ci.n} questions")
+    if report.judge_accuracy() is not None:
+        print(f"  judge says correct    {report.judge_accuracy():6.0%}")
+    if report.mean_faithfulness() is not None:
+        print(f"  faithfulness          {report.mean_faithfulness():6.2f}")
+    if report.mean_relevancy() is not None:
+        print(f"  answer relevancy      {report.mean_relevancy():6.2f}")
     if answerable:
         latencies = sorted(o.latency_ms for o in answerable)
         p95 = latencies[int(0.95 * (len(latencies) - 1))]
@@ -305,6 +379,13 @@ def print_report(report: AnswersReport) -> None:
     errors = [o for o in report.outcomes if o.error]
     if errors:
         print(f"  errors                {len(errors)} (first: {errors[0].error})")
+    scoring = [
+        o
+        for o in report.outcomes
+        if o.scoring_error or (o.judge_reason or "").startswith("judge failed")
+    ]
+    if scoring:
+        print(print(f"  scoring failures      {len(scoring)} (judge/Ragas call failed)"))
 
 
 def main() -> None:
@@ -314,11 +395,24 @@ def main() -> None:
     parser.add_argument("--samples", type=Path, default=Path("data/samples"))
     parser.add_argument("--config", type=Path, default=Path("configs/default.yaml"))
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument(
+        "--no-judge", action="store_true", help="skip the judge and Ragas-style metrics"
+    )
+    parser.add_argument("--no-track", action="store_true", help="do not log the run to MLflow")
     args = parser.parse_args()
-    report = asyncio.run(run(args.samples, args.config, args.limit))
+    report = asyncio.run(
+        run(args.samples, args.config, args.limit, judge_enabled=not args.no_judge)
+    )
     out = args.samples / f"eval-answers-{report.config}.json"
     out.write_text(report.model_dump_json(indent=2) + "\n")
     print_report(report)
+    if not args.no_track:
+        config = PipelineConfig.from_yaml(args.config)
+        previous = previous_metrics("answers", report.config)
+        run_id = log_run(
+            "answers", report.config, flatten_config(config.model_dump()), report.metrics(), out
+        )
+        print(f"\nmlflow run {run_id}\n{format_diff(report.metrics(), previous)}")
     print(
         json.dumps(
             {

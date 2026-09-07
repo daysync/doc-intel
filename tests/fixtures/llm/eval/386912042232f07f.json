@@ -1,0 +1,18 @@
+{
+  "key": "386912042232f07f9558d477262d39a60fc23fda92fb3920b9a3e4405dae3a6e",
+  "recorded_at": "2026-09-06T18:26:36.083622Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-002-uk-classic-hard, page 1, line_item:\nInvoice SF-2026-9414, line 1: Освітлююча пудра 500г; quantity 3 шт; unit price 52,42; line total 157,26\n\n[2] document eval-002-uk-c",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"3 шт\", \"citations\": [ {\"excerpt\": 1, \"quote\": \"Invoice SF-2026-9414, line 1: Освітлююча пудра 500г; quantity 3 шт\"}],\"not_in_documents\": false,\"confidence\": 1}",
+    "input_tokens": 639,
+    "output_tokens": 78,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

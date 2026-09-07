@@ -1,0 +1,18 @@
+{
+  "key": "b35725d8f9e069de25349658fe2a3497d497521bbd3117e221e68af0cab32662",
+  "recorded_at": "2026-09-06T18:26:44.329786Z",
+  "provider": "ollama",
+  "request": {
+    "model": "qwen2.5vl:3b",
+    "system_preview": "You answer questions about a set of supplier invoices using only the numbered\nexcerpts provided. Rules:\n- Use only the e",
+    "user_text_preview": "Excerpts:\n\n[1] document eval-001-ru-classic-mild, page 1, line_item:\nInvoice INV-2026-1151, line 1: Кондиционер кератин 1л; quantity 1 шт; unit price 1,58; line total 1,58\n\n[2] document eval-001-ru-cl",
+    "image_count": 0
+  },
+  "response": {
+    "text": "{ \"answer\": \"Not in the documents.\", \"citations\": [],\"not_in_documents\": true, \"confidence\": 0.0 }",
+    "input_tokens": 562,
+    "output_tokens": 33,
+    "cached_input_tokens": 0,
+    "request_id": null
+  }
+}

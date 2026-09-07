@@ -8,6 +8,7 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
   "anthropic>=1.4,<2",
   "fastapi>=0.141,<1",
+  "mlflow>=3.16,<4",
   "numpy>=2.5,<3",
   "ollama>=0.6,<1",
   "openai>=3.8,<4",

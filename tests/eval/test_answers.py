@@ -67,3 +67,24 @@ def test_report_metrics() -> None:
     assert report.decline_rate() == 0.5
     assert abs(report.citation_support_rate() - 2 / 3) < 1e-9
     assert report.by_kind() == {"header": 0.0, "totals": 0.5}
+
+
+def test_scoring_failures_are_recorded_not_fatal() -> None:
+    from doc_intel.eval.answers import AnswerOutcome
+
+    outcome = AnswerOutcome(
+        case=AnswerCase(question="q", document_id="d", kind="totals", expected="1", language="en"),
+        answer="1",
+        correct=True,
+        supported=True,
+        not_in_documents=False,
+        citations=1,
+        retrieval_rank=1,
+        scoped=True,
+        cost_usd=Decimal(0),
+        latency_ms=1,
+        judge_reason="judge failed: StructuredOutputError",
+        scoring_error="StructuredOutputError: x",
+    )
+    report = AnswersReport(config="c", model="m", rerank=False, outcomes=[outcome])
+    assert report.answer_accuracy() == 1.0 and report.judge_accuracy() is None

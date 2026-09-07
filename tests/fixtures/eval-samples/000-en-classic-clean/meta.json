@@ -1,0 +1,16 @@
+{
+  "id": "000-en-classic-clean",
+  "language": "en",
+  "layout": "classic",
+  "level": "clean",
+  "expected_issues": [],
+  "degradation": {
+    "level": "clean",
+    "angle_deg": 0.0,
+    "perspective": 0.0,
+    "blur_px": 0,
+    "noise_sigma": 0.0,
+    "lighting": 0.0,
+    "jpeg_quality": 100
+  }
+}

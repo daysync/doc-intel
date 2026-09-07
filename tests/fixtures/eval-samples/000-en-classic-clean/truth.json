@@ -1,0 +1,261 @@
+{
+  "supplier": {
+    "name": {
+      "value": "Beauty Supplies Ltd",
+      "quote": "Beauty Supplies Ltd",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "GB339075793",
+      "quote": "GB339075793",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "88 King Road, London",
+      "quote": "88 King Road, London",
+      "confidence": 1.0
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "Studio Luma",
+      "quote": "Studio Luma",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "GB470174681",
+      "quote": "GB470174681",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "88 King Road, London",
+      "quote": "88 King Road, London",
+      "confidence": 1.0
+    }
+  },
+  "number": {
+    "value": "SF-2026-8321",
+    "quote": "SF-2026-8321",
+    "confidence": 1.0
+  },
+  "issue_date": {
+    "value": "2026-10-14",
+    "quote": "14 Oct 2026",
+    "confidence": 1.0
+  },
+  "due_date": {
+    "value": "2026-10-28",
+    "quote": "28 Oct 2026",
+    "confidence": 1.0
+  },
+  "currency": {
+    "value": "USD",
+    "quote": "USD",
+    "confidence": 1.0
+  },
+  "language": {
+    "value": "en",
+    "quote": "en",
+    "confidence": 1.0
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "Nail gel base 15ml",
+        "quote": "Nail gel base 15ml",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "8",
+        "quote": "8",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "pcs",
+        "quote": "pcs",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "51.20",
+        "quote": "51.20",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "409.60",
+        "quote": "409.60",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Keratin conditioner 1L",
+        "quote": "Keratin conditioner 1L",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "2",
+        "quote": "2",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "bottle",
+        "quote": "bottle",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "89.75",
+        "quote": "89.75",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "179.50",
+        "quote": "179.50",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Disposable towels 50pc",
+        "quote": "Disposable towels 50pc",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "11",
+        "quote": "11",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "bottle",
+        "quote": "bottle",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "8.36",
+        "quote": "8.36",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "91.96",
+        "quote": "91.96",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Face mask sheet 10pc",
+        "quote": "Face mask sheet 10pc",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "7",
+        "quote": "7",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "bottle",
+        "quote": "bottle",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "75.71",
+        "quote": "75.71",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "529.97",
+        "quote": "529.97",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Bleach powder 500g",
+        "quote": "Bleach powder 500g",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "12",
+        "quote": "12",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "bottle",
+        "quote": "bottle",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "27.30",
+        "quote": "27.30",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "327.60",
+        "quote": "327.60",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Argan shampoo 1L",
+        "quote": "Argan shampoo 1L",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "1",
+        "quote": "1",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "pcs",
+        "quote": "pcs",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "88.06",
+        "quote": "88.06",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "88.06",
+        "quote": "88.06",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "taxes": [
+    {
+      "name": {
+        "value": "VAT",
+        "quote": "VAT",
+        "confidence": 1.0
+      },
+      "rate": {
+        "value": "0.20",
+        "quote": "20%",
+        "confidence": 1.0
+      },
+      "amount": {
+        "value": "325.34",
+        "quote": "325.34",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "totals": {
+    "subtotal": {
+      "value": "1626.69",
+      "quote": "1,626.69",
+      "confidence": 1.0
+    },
+    "tax_total": {
+      "value": "325.34",
+      "quote": "325.34",
+      "confidence": 1.0
+    },
+    "grand_total": {
+      "value": "1952.03",
+      "quote": "1,952.03",
+      "confidence": 1.0
+    }
+  }
+}

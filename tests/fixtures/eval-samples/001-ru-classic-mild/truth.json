@@ -1,0 +1,261 @@
+{
+  "supplier": {
+    "name": {
+      "value": "ООО Бьюти Трейд",
+      "quote": "ООО Бьюти Трейд",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "2310077283",
+      "quote": "2310077283",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "пр. Свободы 4, Одесса",
+      "quote": "пр. Свободы 4, Одесса",
+      "confidence": 1.0
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "Студия Люма",
+      "quote": "Студия Люма",
+      "confidence": 1.0
+    },
+    "tax_id": {
+      "value": "2661663049",
+      "quote": "2661663049",
+      "confidence": 1.0
+    },
+    "address": {
+      "value": "пр. Свободы 4, Одесса",
+      "quote": "пр. Свободы 4, Одесса",
+      "confidence": 1.0
+    }
+  },
+  "number": {
+    "value": "INV-2026-1151",
+    "quote": "INV-2026-1151",
+    "confidence": 1.0
+  },
+  "issue_date": {
+    "value": "2026-09-20",
+    "quote": "20.09.2026",
+    "confidence": 1.0
+  },
+  "due_date": {
+    "value": "2026-10-04",
+    "quote": "04.10.2026",
+    "confidence": 1.0
+  },
+  "currency": {
+    "value": "GEL",
+    "quote": "GEL",
+    "confidence": 1.0
+  },
+  "language": {
+    "value": "ru",
+    "quote": "ru",
+    "confidence": 1.0
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "Кондиционер кератин 1л",
+        "quote": "Кондиционер кератин 1л",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "1",
+        "quote": "1",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "шт",
+        "quote": "шт",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "1.58",
+        "quote": "1,58",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "1.58",
+        "quote": "1,58",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "База для геля 15мл",
+        "quote": "База для геля 15мл",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "4",
+        "quote": "4",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "уп",
+        "quote": "уп",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "10.07",
+        "quote": "10,07",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "40.28",
+        "quote": "40,28",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Шампунь аргановый 1л",
+        "quote": "Шампунь аргановый 1л",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "7",
+        "quote": "7",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "уп",
+        "quote": "уп",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "66.61",
+        "quote": "66,61",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "466.27",
+        "quote": "466,27",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Краска для волос 7.1 60мл",
+        "quote": "Краска для волос 7.1 60мл",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "2",
+        "quote": "2",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "фл",
+        "quote": "фл",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "34.02",
+        "quote": "34,02",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "68.04",
+        "quote": "68,04",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Осветляющая пудра 500г",
+        "quote": "Осветляющая пудра 500г",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "5",
+        "quote": "5",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "шт",
+        "quote": "шт",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "56.69",
+        "quote": "56,69",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "283.45",
+        "quote": "283,45",
+        "confidence": 1.0
+      }
+    },
+    {
+      "description": {
+        "value": "Масло для машинки",
+        "quote": "Масло для машинки",
+        "confidence": 1.0
+      },
+      "quantity": {
+        "value": "5",
+        "quote": "5",
+        "confidence": 1.0
+      },
+      "unit": {
+        "value": "шт",
+        "quote": "шт",
+        "confidence": 1.0
+      },
+      "unit_price": {
+        "value": "55.99",
+        "quote": "55,99",
+        "confidence": 1.0
+      },
+      "total": {
+        "value": "279.95",
+        "quote": "279,95",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "taxes": [
+    {
+      "name": {
+        "value": "НДС",
+        "quote": "НДС",
+        "confidence": 1.0
+      },
+      "rate": {
+        "value": "0.18",
+        "quote": "18%",
+        "confidence": 1.0
+      },
+      "amount": {
+        "value": "205.12",
+        "quote": "205,12",
+        "confidence": 1.0
+      }
+    }
+  ],
+  "totals": {
+    "subtotal": {
+      "value": "1139.57",
+      "quote": "1 139,57",
+      "confidence": 1.0
+    },
+    "tax_total": {
+      "value": "205.12",
+      "quote": "205,12",
+      "confidence": 1.0
+    },
+    "grand_total": {
+      "value": "1344.69",
+      "quote": "1 344,69",
+      "confidence": 1.0
+    }
+  }
+}
